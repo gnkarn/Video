@@ -1,7 +1,14 @@
 var video;
 
-var vScale = 20;
-var hScale = 30;
+var ledMatrixWidth = 20;
+var ledMatrixHeight = 24 ;
+
+var myCanvasW = 600 ,
+  myCanvasH = 480 ;
+
+  var hScale = myCanvasW/ledMatrixWidth;
+  var vScale = myCanvasH/ledMatrixHeight;
+
 var lcolor = {
     "r":0,
     "g":0,
@@ -25,8 +32,7 @@ function setup() {
   //  socket = io.connect('http://localhost:3000');
   //}
 
-  
-  createCanvas(600, 480);
+  createCanvas(myCanvasW, myCanvasH);
   pixelDensity(1);
   video = createCapture(VIDEO);
   video.size(width / hScale, height / vScale);
