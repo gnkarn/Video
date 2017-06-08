@@ -5,7 +5,8 @@ var express = require('express'),
 var app = express(); // made express aplication
 
 // todo lo que esta el directorio public , los usuarios lo ven directamente con la app
-app.use(express.static('public'));
+//app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 
 var path = require('path');
 const INDEX = path.join(__dirname, '/public/index.html');
