@@ -3,8 +3,8 @@ var video;
 var ledMatrixWidth = 20;
 var ledMatrixHeight = 24 ;
 
-var myCanvasW = 600 ,
-  myCanvasH = 480 ;
+var myCanvasW = 800 ,
+  myCanvasH = 600 ;
 
   var hScale = myCanvasW/ledMatrixWidth;
   var vScale = myCanvasH/ledMatrixHeight;
