@@ -4,7 +4,7 @@ var express = require('express'),
   https = require('https');
 var app = express(); // made express aplication
 var path = require('path');
-const INDEX = path.join(__dirname, 'index.html');
+const INDEX = path.join(__dirname, '/public/index.html');
 
 // viewed at http://localhost:8080
 
