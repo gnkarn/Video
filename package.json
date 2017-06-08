@@ -2,7 +2,8 @@
   "name": "video",
   "version": "1.0.0",
   "engines": {
-    "node": "6.10.3"
+    "node": "6.10.3",
+    "npm": "4.6.1"
   },
   "description": "p5js video , sent as json via websockets",
   "main": "sketch.js",
@@ -30,7 +31,7 @@
   },
   "homepage": "https://github.com/gnkarn/p5jsVideo#readme",
   "dependencies": {
-    "express": "4.15.3",
+    "express": "^4.15.3",
     "socket.io": "^2.0.2"
   }
 }
