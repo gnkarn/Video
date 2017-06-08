@@ -6,7 +6,7 @@
     "npm": "4.6.1"
   },
   "description": "p5js video , sent as json via websockets",
-  "main": "sketch.js",
+  "main": "/public/sketch.js",
   "directories": {
     "lib": "lib"
   },
