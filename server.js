@@ -4,15 +4,19 @@ var express = require('express'),
   https = require('https');
 var app = express(); // made express aplication
 var path = require('path');
+const INDEX = path.join(__dirname, 'index.html');
 
 // viewed at http://localhost:8080
 
 // http.createServer(app).listen(8080,"192.168.0.16");
 // var server = http.Server(app);
 // use the following for Heroku
-var server= app.listen(process.env.PORT || 3000, function(){
-  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-});
+var server = app
+  .use((req, res) => res.sendFile(INDEX))
+  .listen(process.env.PORT || 3000, function() {
+    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+  });
+
 
 //var server    = app.listen(3000);
 
@@ -22,9 +26,6 @@ var server= app.listen(process.env.PORT || 3000, function(){
 var socket = require('socket.io');
 var io = socket(server);
 
-app.get('/', function(req, res) {
-  res.sendFile(path.join(__dirname + '/public/index.html'));
-});
 
 //var server = app.listen(8080);
 var clientNum = 0;
@@ -33,3 +34,10 @@ var clientNum = 0;
 app.use(express.static('public'));
 
 console.log('VIDEO socket server running');
+
+io.on('connection', (socket) => {
+  console.log('Client connected');
+  socket.on('disconnect', () => console.log('Client disconnected'));
+});
+
+setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
