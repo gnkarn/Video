@@ -1,6 +1,6 @@
 var video;
 
-var myJSON ="";
+var myJSON;
 
 var ledMatrixWidth = 20;
 var ledMatrixHeight = 24 ;
