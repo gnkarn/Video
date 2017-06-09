@@ -1,5 +1,7 @@
 var video;
 
+var myJSON ="";
+
 var ledMatrixWidth = 20;
 var ledMatrixHeight = 24 ;
 
@@ -76,6 +78,6 @@ function draw() {
 
     }
   }
-  var myJSON = JSON.stringify(ledMatrix);
+   myJSON = JSON.stringify(ledMatrix);
   //console.log(myJSON);
 }
