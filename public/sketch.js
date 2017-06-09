@@ -17,6 +17,8 @@ var lcolor = {
 
 // preparo el objeto para el mensaje
 var ledMatrix = [];
+
+// led element not needed so far
 function  LedElement(x,y,lcolor){
     this.x=x;
     this.y=y;
@@ -70,7 +72,7 @@ function draw() {
       fill(r, g, b, bright);
       //rectMode(CENTER);
       rect(x * (hScale), y * (vScale), hScale, vScale);
-      ledMatrix[x,y] = {"r":r,"g":g,"b":b};
+      ledMatrix[(x,y)] = {"r":r,"g":g,"b":b};
 
     }
   }
