@@ -72,7 +72,7 @@ function draw() {
       fill(r, g, b, bright);
       //rectMode(CENTER);
       rect(x * (hScale), y * (vScale), hScale, vScale);
-      ledMatrix[(x,y)] = {"r":r,"g":g,"b":b};
+      ledMatrix[y*width+x] = {"r":r,"g":g,"b":b};
 
     }
   }
