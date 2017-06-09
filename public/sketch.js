@@ -47,7 +47,7 @@ for (var y = 0; y < video.height; y++) {
     var g = y;
     var b = 0;
     console.log(r,g,b);
-    ledMatrix[y*width+x] = {"r":r,"g":g,"b":b};
+    ledMatrix[y*ledMatrixWidth+x] = {"r":r,"g":g,"b":b};
   }
 }
   console.log(ledMatrix);
