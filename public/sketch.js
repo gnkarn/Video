@@ -37,7 +37,7 @@ function setup() {
   createCanvas(myCanvasW, myCanvasH);
   pixelDensity(1);
   video = createCapture(VIDEO);
-  video.size(width / hScale, height / vScale);
+  video.size(width / hScale, height / vScale); // sets the video dom element size
 
 // set up the matrix object and all elements
 for (var y = 0; y < video.height; y++) {
@@ -72,7 +72,7 @@ function draw() {
       fill(r, g, b, bright);
       //rectMode(CENTER);
       rect(x * (hScale), y * (vScale), hScale, vScale);
-      ledMatrix[y*width+x] = {"r":r,"g":g,"b":b};
+      ledMatrix[y*ledMatrixWidth+x] = {"r":r,"g":g,"b":b};
 
     }
   }
