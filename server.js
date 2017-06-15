@@ -3,6 +3,12 @@ var express = require('express'),
   http = require('http'),
   https = require('https');
 var app = express(); // made express aplication
+
+// llama la funcion socket con la funcion server como argumento
+// io es ahora organiza el intercambio de datos llamando a la funcion socket
+// import socket library
+var socket = require('socket.io');
+var io = socket(server);
 var clients = 0;
 
 // todo lo que esta el directorio public , los usuarios lo ven directamente con la app
@@ -26,11 +32,6 @@ var server = app
 
 //var server    = app.listen(3000);
 
-// llama la funcion socket con la funcion server como argumento
-// io es ahora organiza el intercambio de datos llamando a la funcion socket
-// import socket library
-var socket = require('socket.io');
-var io = socket(server);
 
 
 //var server = app.listen(8080);
