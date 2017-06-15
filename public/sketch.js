@@ -1,6 +1,7 @@
 var video;
 
 var myJSON;
+ var socket = io();
 
 var ledMatrixWidth = 20;
 var ledMatrixHeight = 24 ;
@@ -53,6 +54,11 @@ for (var y = 0; y < video.height; y++) {
   }
 }
   console.log(ledMatrix);
+
+  socket.on('newclientconnect',function(data){
+			  document.body.innerHTML = '';
+			  document.write(data.description);
+	  });
 }
 
 function draw() {
@@ -79,5 +85,6 @@ function draw() {
     }
   }
    myJSON = JSON.stringify(ledMatrix);
+   socket.emit('msgMatrixAserver', myJSON);
   //console.log(myJSON);
 }
