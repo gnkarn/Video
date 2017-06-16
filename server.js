@@ -1,7 +1,5 @@
 // prepare the server on port 3000
-var express = require('express'),
-  http = require('http'),
-  https = require('https');
+var express = require('express');
 
 // http.createServer(app).listen(8080,"192.168.0.16");
 // var server = http.Server(app);
@@ -39,7 +37,7 @@ var clients = 0;
 //var server    = app.listen(3000);
 
 //var server = app.listen(8080);
-var clientNum = 0;
+
 
 
 console.log('VIDEO socket server running');
@@ -61,7 +59,7 @@ io.on('connection', function(socket) {
     });
   });
   socket.on('msgMatrixAserver', function(msg) {
-    console.log('recibido :', data);
+    console.log('recibido :', msg);
   });
 });
 
