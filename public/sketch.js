@@ -8,6 +8,8 @@ var ledMatrixHeight = 24;
 
 var myCanvasW = 800,
   myCanvasH = 600;
+var myCanvas;
+var h1;
 
   var hScale = myCanvasW / ledMatrixWidth;
   var vScale = myCanvasH / ledMatrixHeight;
@@ -37,10 +39,11 @@ function setup() {
   //  socket = io.connect('http://localhost:3000');
   //}
 
-  createCanvas(myCanvasW, myCanvasH);
+  myCanvas = createCanvas(myCanvasW, myCanvasH);
+  myCanvas.position(10, 400);
   pixelDensity(1);
   video = createCapture(VIDEO);
-  video.size(width / hScale, height / vScale); // sets the video dom element size
+  video.size(myCanvas.width / hScale, myCanvas.height / vScale); // sets the video dom element size
 
 // set up the matrix object and all elements
 for (var y = 0; y < video.height; y++) {
@@ -56,8 +59,8 @@ for (var y = 0; y < video.height; y++) {
   console.log(ledMatrix);
 
   socket.on('newclientconnect',function(data){
-			  //document.body.innerHTML = '';
-			  //document.write(data.description);
+			  document.footer = '';
+			  document.write(data.description);
 	  });
 }
 

@@ -12,9 +12,7 @@ var app = express(); // made express aplication and create HTTP server
 // io es ahora organiza el intercambio de datos llamando a la funcion socket
 // import socket library
 var socket = require('socket.io');
-// Create Websocket server
-//The Socket.io server takes an HTTP server as an argument so that it can listen for socket.io-related requests:
-var io = socket(server);
+
 
 
 
@@ -34,6 +32,9 @@ var server = app
 
 var clients = 0;
 
+// Create Websocket server
+//The Socket.io server takes an HTTP server as an argument so that it can listen for socket.io-related requests:
+var io = socket(server);
 //var server    = app.listen(3000);
 
 //var server = app.listen(8080);
@@ -41,7 +42,7 @@ var clients = 0;
 
 
 console.log('VIDEO socket server running');
-// for heroku replaces io. for wss.
+
 io.on('connection', function(socket) {
   console.log('Client connected');
   clients++;
@@ -59,7 +60,7 @@ io.on('connection', function(socket) {
     });
   });
   socket.on('msgMatrixAserver', function(msg) {
-    console.log('recibido :', msg);
+    console.log('recibido :', msg.length);
   });
 });
 
