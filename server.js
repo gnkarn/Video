@@ -5,11 +5,7 @@ var express = require('express');
 // var server = http.Server(app);
 // use the following for Heroku
 var app = express(); // made express aplication and create HTTP server
-var server = app
-  .use((req, res) => res.sendFile(INDEX))
-  .listen(process.env.PORT || 3000, function() {
-    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-  });
+
 
 
 // llama la funcion socket con la funcion server como argumento
@@ -30,7 +26,11 @@ var path = require('path');
 const INDEX = path.join(__dirname, '/public/index.html');
 
 // viewed at http://localhost:8080
-
+var server = app
+  .use((req, res) => res.sendFile(INDEX))
+  .listen(process.env.PORT || 3000, function() {
+    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+  });
 
 var clients = 0;
 

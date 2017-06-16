@@ -56,8 +56,8 @@ for (var y = 0; y < video.height; y++) {
   console.log(ledMatrix);
 
   socket.on('newclientconnect',function(data){
-			  document.body.innerHTML = '';
-			  document.write(data.description);
+			  //document.body.innerHTML = '';
+			  //document.write(data.description);
 	  });
 }
 
