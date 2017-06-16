@@ -11,6 +11,10 @@ var app = express(); // made express aplication
 // import socket library
 var socket = require('socket.io');
 //var io = socket(server);
+
+// for Heroku The WebSocket server takes an HTTP server as an argument so that it can listen for ‘upgrade’ events:
+// replaces io.  for  wss.
+const wss = new SocketServer({ server });
 var clients = 0;
 
 // todo lo que esta el directorio public , los usuarios lo ven directamente con la app
@@ -31,9 +35,7 @@ var server = app
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
   });
 
-  // for Heroku The WebSocket server takes an HTTP server as an argument so that it can listen for ‘upgrade’ events:
-  // replaces io.  for  wss.
-  const wss = new SocketServer({ server });
+
 
 //var server    = app.listen(3000);
 
