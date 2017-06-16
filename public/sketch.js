@@ -4,19 +4,19 @@ var myJSON;
  var socket = io();
 
 var ledMatrixWidth = 20;
-var ledMatrixHeight = 24 ;
+var ledMatrixHeight = 24;
 
-var myCanvasW = 800 ,
-  myCanvasH = 600 ;
+var myCanvasW = 800,
+  myCanvasH = 600;
 
-  var hScale = myCanvasW/ledMatrixWidth;
-  var vScale = myCanvasH/ledMatrixHeight;
+  var hScale = myCanvasW / ledMatrixWidth;
+  var vScale = myCanvasH / ledMatrixHeight;
 
 var lcolor = {
     "r":0,
     "g":0,
     "b":0
-}
+};
 
 // preparo el objeto para el mensaje
 var ledMatrix = [];
@@ -26,7 +26,7 @@ function  LedElement(x,y,lcolor){
     this.x=x;
     this.y=y;
      this.lcol.r = lcolor
-   };
+   }
 
 function setup() {
 
