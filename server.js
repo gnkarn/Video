@@ -3,14 +3,23 @@ var express = require('express'),
   http = require('http'),
   https = require('https');
 
-
+  // http.createServer(app).listen(8080,"192.168.0.16");
+  // var server = http.Server(app);
+  // use the following for Heroku
+  var app = express(); // made express aplication and create HTTP server
+  var server = app
+    .use((req, res) => res.sendFile(INDEX))
+    .listen(process.env.PORT || 3000, function() {
+      console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+    });
 
 
 // llama la funcion socket con la funcion server como argumento
 // io es ahora organiza el intercambio de datos llamando a la funcion socket
 // import socket library
 var socket = require('socket.io');
-//var io = socket(server);
+  // Create Websocket server
+var io = socket(server);
 
 
 
@@ -23,20 +32,7 @@ const INDEX = path.join(__dirname, '/public/index.html');
 
 // viewed at http://localhost:8080
 
-// http.createServer(app).listen(8080,"192.168.0.16");
-// var server = http.Server(app);
-// use the following for Heroku
-var app = express(); // made express aplication and create HTTP server
-var server = app
-  .use((req, res) => res.sendFile(INDEX))
-  .listen(process.env.PORT || 3000, function() {
-    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-  });
 
-  // Create Wensocket server
-  // for Heroku The WebSocket server takes an HTTP server as an argument so that it can listen for ‘upgrade’ events:
-  // replaces io.  for  wss.
-  const wss = new SocketServer({ server });
   var clients = 0;
 
 //var server    = app.listen(3000);
@@ -47,7 +43,7 @@ var clientNum = 0;
 
 console.log('VIDEO socket server running');
 // for heroku replaces io. for wss.
-wss.on('connection', function(socket){
+io.on('connection', function(socket){
       console.log('Client connected');
       clients++;
       socket.emit('newclientconnect', {
@@ -68,4 +64,4 @@ wss.on('connection', function(socket){
           });
       });
 
-    setInterval(() => wss.emit('time', new Date().toTimeString()), 1000);
+    setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
