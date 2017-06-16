@@ -2,7 +2,7 @@
 var express = require('express'),
   http = require('http'),
   https = require('https');
-var app = express(); // made express aplication
+
 
 
 
@@ -12,10 +12,7 @@ var app = express(); // made express aplication
 var socket = require('socket.io');
 //var io = socket(server);
 
-// for Heroku The WebSocket server takes an HTTP server as an argument so that it can listen for ‘upgrade’ events:
-// replaces io.  for  wss.
-const wss = new SocketServer({ server });
-var clients = 0;
+
 
 // todo lo que esta el directorio public , los usuarios lo ven directamente con la app
 //app.use(express.static('public'));
@@ -29,17 +26,20 @@ const INDEX = path.join(__dirname, '/public/index.html');
 // http.createServer(app).listen(8080,"192.168.0.16");
 // var server = http.Server(app);
 // use the following for Heroku
+var app = express(); // made express aplication and create HTTP server
 var server = app
   .use((req, res) => res.sendFile(INDEX))
   .listen(process.env.PORT || 3000, function() {
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
   });
 
-
+  // Create Wensocket server
+  // for Heroku The WebSocket server takes an HTTP server as an argument so that it can listen for ‘upgrade’ events:
+  // replaces io.  for  wss.
+  const wss = new SocketServer({ server });
+  var clients = 0;
 
 //var server    = app.listen(3000);
-
-
 
 //var server = app.listen(8080);
 var clientNum = 0;
