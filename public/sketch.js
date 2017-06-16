@@ -43,7 +43,9 @@ function setup() {
   //myCanvas.position(10, 300);
   pixelDensity(1);
   video = createCapture(VIDEO);
+
   video.size(myCanvas.width / hScale, myCanvas.height / vScale); // sets the video dom element size
+  video.position(400, 0);
 
   // set up the matrix object and all elements
   for (var y = 0; y < video.height; y++) {
@@ -63,8 +65,8 @@ function setup() {
   console.log(ledMatrix);
 
   socket.on('newclientconnect', function(data) {
-    document.footer = '';
-    document.write(data.description);
+    //document.footer = '';
+    //document.write(data.description);
   });
 }
 
