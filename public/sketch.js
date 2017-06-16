@@ -21,7 +21,7 @@ var lcolor = {
 };
 
 // preparo el objeto para el mensaje
-var ledMatrix = [];
+var ledMatrix = [lcolor];
 
 // led element not needed so far
 function LedElement(x, y, lcolor) {
@@ -40,7 +40,7 @@ function setup() {
   //}
 
   myCanvas = createCanvas(myCanvasW, myCanvasH);
-  myCanvas.position(10, 300);
+  //myCanvas.position(10, 300);
   pixelDensity(1);
   video = createCapture(VIDEO);
   video.size(myCanvas.width / hScale, myCanvas.height / vScale); // sets the video dom element size
