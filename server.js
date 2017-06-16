@@ -4,11 +4,13 @@ var express = require('express'),
   https = require('https');
 var app = express(); // made express aplication
 
+
+
 // llama la funcion socket con la funcion server como argumento
 // io es ahora organiza el intercambio de datos llamando a la funcion socket
 // import socket library
 var socket = require('socket.io');
-var io = socket(server);
+//var io = socket(server);
 var clients = 0;
 
 // todo lo que esta el directorio public , los usuarios lo ven directamente con la app
@@ -29,6 +31,9 @@ var server = app
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
   });
 
+  // for Heroku The WebSocket server takes an HTTP server as an argument so that it can listen for ‘upgrade’ events:
+  // replaces io.  for  wss.
+  const wss = new SocketServer({ server });
 
 //var server    = app.listen(3000);
 
@@ -39,8 +44,8 @@ var clientNum = 0;
 
 
 console.log('VIDEO socket server running');
-
-io.on('connection', function(socket){
+// for heroku replaces io. for wss.
+wss.on('connection', function(socket){
       console.log('Client connected');
       clients++;
       socket.emit('newclientconnect', {
@@ -61,4 +66,4 @@ io.on('connection', function(socket){
           });
       });
 
-    setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+    setInterval(() => wss.emit('time', new Date().toTimeString()), 1000);
