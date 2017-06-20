@@ -1,5 +1,6 @@
 var video;
 
+
 var myJSON;
 var socket = io();
 
@@ -19,6 +20,7 @@ var lcolor = {
   "g": 0,
   "b": 0
 };
+var matrixReceived = [lcolor];
 
 // preparo el objeto para el mensaje
 var ledMatrix = [lcolor];
@@ -76,6 +78,7 @@ function setup() {
     var footer2 = select('#footer2');
     footer2.html ('FR= ' + floor(frameRate()));
       console.log('recibido :', msg.length);
+      matrixReceived = JSON.parse(msg);
   });
 }
 
@@ -90,22 +93,28 @@ function draw() {
       lcolor.r = video.pixels[index + 0];
       lcolor.g = video.pixels[index + 1];
       lcolor.b = video.pixels[index + 2];
-
       var bright = video.pixels[index + 3]; // (r+g+b)/3;
+
+      ledMatrix[y * ledMatrixWidth + x] = {
+        "r": lcolor.r,
+        "g": lcolor.g,
+        "b": lcolor.b
+      };
+
+      // load received matrix instead of original matrix
+      //ledMatrix holds de source leds , to be sent to server
+      //matrixReceived is the Matrix "rebounded" by the server to clients
+      // if you need to see on canvas the sent matrix , just commentOut next line
+      lcolor = Object.assign({}, matrixReceived[y * ledMatrixWidth + x]);
 
       //var w = map(bright, 0, 255, 0, vScale);
       noStroke();
       fill(lcolor.r, lcolor.g, lcolor.b, bright);
       //rectMode(CENTER);
       rect(x * (hScale), y * (vScale), hScale, vScale);
-      ledMatrix[y * ledMatrixWidth + x] = {
-        "r": lcolor.r,
-        "g": lcolor.g,
-        "b": lcolor.b
-      };
-      //ledMatrix[y*ledMatrixWidth+x] = {"r":r,"g":g,"b":b};
     }
   }
+  // sends Matrix pixel data to server as 1 matrix per frame
   myJSON = JSON.stringify(ledMatrix);
   socket.emit('msgMatrixAserver', myJSON);
   // console.log(myJSON);

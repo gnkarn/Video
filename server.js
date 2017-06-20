@@ -38,9 +38,6 @@ var io = socket(server);
 //var server    = app.listen(3000);
 
 //var server = app.listen(8080);
-
-
-
 console.log('VIDEO socket server running');
 
 io.on('connection', function(socket) {
@@ -59,9 +56,9 @@ io.on('connection', function(socket) {
       description: clients + ' clients connected!'
     });
   });
+  // once matrix is received from source it is send back to all clients
   socket.on('msgMatrixAserver', function (msg) {
     //console.log('recibido :', msg.length);
-
     socket.emit('msgFromServer', msg);
   });
 });
