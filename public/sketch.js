@@ -42,10 +42,13 @@ function setup() {
   myCanvas = createCanvas(myCanvasW, myCanvasH);
   //myCanvas.position(10, 300);
   pixelDensity(1);
+  myCanvas.parent('#canvas1');
+
   video = createCapture(VIDEO);
 
   video.size(myCanvas.width / hScale, myCanvas.height / vScale); // sets the video dom element size
-  video.position(400, 0);
+  //video.position(0, 0);
+    video.parent('#canvas2')
 
   // set up the matrix object and all elements
   for (var y = 0; y < video.height; y++) {
@@ -64,9 +67,15 @@ function setup() {
   }
   console.log(ledMatrix);
 
-  socket.on('newclientconnect', function(data) {
-    //document.footer = '';
-    //document.write(data.description);
+  socket.on('newclientconnect', function (data) {
+    var footer1 = select('#footer1');
+    footer1.html('descripcion :' + data.description);
+  });
+
+  socket.on('msgFromServer', function (msg) {
+    var footer2 = select('#footer2');
+    footer2.html ('FR= ' + floor(frameRate()));
+      console.log('recibido :', msg.length);
   });
 }
 
@@ -89,11 +98,15 @@ function draw() {
       fill(lcolor.r, lcolor.g, lcolor.b, bright);
       //rectMode(CENTER);
       rect(x * (hScale), y * (vScale), hScale, vScale);
-      ledMatrix[y * ledMatrixWidth + x] = lcolor;
+      ledMatrix[y * ledMatrixWidth + x] = {
+        "r": lcolor.r,
+        "g": lcolor.g,
+        "b": lcolor.b
+      };
       //ledMatrix[y*ledMatrixWidth+x] = {"r":r,"g":g,"b":b};
     }
   }
   myJSON = JSON.stringify(ledMatrix);
   socket.emit('msgMatrixAserver', myJSON);
-  //console.log(myJSON);
+  // console.log(myJSON);
 }

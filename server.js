@@ -13,7 +13,7 @@ var app = express(); // made express aplication and create HTTP server
 // import socket library
 var socket = require('socket.io');
 
-
+var myJSON; // contine el mensaje desde el servidor a los clientes
 
 
 // todo lo que esta el directorio public , los usuarios lo ven directamente con la app
@@ -49,18 +49,20 @@ io.on('connection', function(socket) {
   socket.emit('newclientconnect', {
     description: 'Hey, welcome!'
   });
-  socket.broadcast.emit('newclientconnect', {
+  socket.emit('newclientconnect', {
     description: clients + ' clients connected!'
   });
   socket.on('disconnect', function() {
     console.log('Client disconnected');
     clients--;
-    socket.broadcast.emit('newclientconnect', {
+    socket.emit('newclientconnect', {
       description: clients + ' clients connected!'
     });
   });
-  socket.on('msgMatrixAserver', function(msg) {
-    console.log('recibido :', msg.length);
+  socket.on('msgMatrixAserver', function (msg) {
+    //console.log('recibido :', msg.length);
+
+    socket.emit('msgFromServer', msg);
   });
 });
 
