@@ -1,6 +1,5 @@
 var video;
 
-
 var myJSON;
 var socket = io();
 
@@ -79,6 +78,13 @@ function setup() {
     footer2.html ('FR= ' + floor(frameRate()));
       console.log('recibido :', msg.length);
       matrixReceived = JSON.parse(msg);
+  });
+
+  socket.on('time', function (data) {
+    var footer3 = select('#footer3');
+    footer3.html ('time = ' +  data);
+      console.log('date :', msg);
+
   });
 }
 
