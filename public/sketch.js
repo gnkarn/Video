@@ -83,7 +83,7 @@ function setup() {
   socket.on('time', function (data) {
     var footer3 = select('#footer3');
     footer3.html ('time = ' +  data);
-      console.log('date :', msg);
+      console.log('date :', data);
 
   });
 }
