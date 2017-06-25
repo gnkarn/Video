@@ -57,9 +57,9 @@ io.on('connection', function(socket) {
     });
   });
   // once matrix is received from source it is send back to all clients
-  socket.on('msgMatrixAserver', function (msg) {
+  socket.on('msgMatrixAserver', function(msg) {
     //console.log('recibido :', msg.length);
-    socket.emit('msgFromServer', msg);
+    socket.send(JSON.stringify({msgName: 'msgVideo', type: 'text', message: msg}));
   });
 });
 

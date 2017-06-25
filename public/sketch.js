@@ -73,9 +73,9 @@ function setup() {
     footer1.html('descripcion :' + data.description);
   });
 
-  socket.on('msgFromServer', function (msg) {
+  socket.on('message', function (msg) {
     var footer2 = select('#footer2');
-    footer2.html ('FR= ' + floor(frameRate()));
+    footer2.html('FR= ' + floor(frameRate()));
       console.log('recibido :', msg.length);
       matrixReceived = JSON.parse(msg);
   });
