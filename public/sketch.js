@@ -78,7 +78,7 @@ function setup() {
     footer2.html('FR= ' + floor(frameRate()));
       console.log('recibido :', msg.length);
       matrixReceived = JSON.parse(msg);
-      
+
   });
 
   socket.on('time', function (data) {
@@ -112,7 +112,7 @@ function draw() {
       //ledMatrix holds de source leds , to be sent to server
       //matrixReceived is the Matrix "rebounded" by the server to clients
       // if you need to see on canvas the sent matrix , just commentOut next line
-      lcolor = Object.assign({}, matrixReceived.message[y * ledMatrixWidth + x]);
+      lcolor = Object.assign({}, matrixReceived[y * ledMatrixWidth + x]);
 
       //var w = map(bright, 0, 255, 0, vScale);
       noStroke();
