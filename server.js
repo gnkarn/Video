@@ -12,6 +12,7 @@ var app = express(); // made express aplication and create HTTP server
 // io es ahora organiza el intercambio de datos llamando a la funcion socket
 // import socket library
 var socket = require('socket.io');
+const WStype_TEXT = 3;
 
 var myJSON; // contine el mensaje desde el servidor a los clientes
 
@@ -59,7 +60,8 @@ io.on('connection', function(socket) {
   // once matrix is received from source it is send back to all clients
   socket.on('msgMatrixAserver', function(msg) {
     //console.log('recibido :', msg.length);
-    socket.send('{"msgName": "msgVideo", "type": "text", "message": ' + msg + '}');
+    // change for a stringify version
+    socket.send('{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
   });
 });
 
