@@ -77,8 +77,9 @@ function setup() {
     var footer2 = select('#footer2');
     footer2.html('FR= ' + floor(frameRate()));
       console.log('recibido :', msg.length);
-      matrixReceived = JSON.parse(msg);
-
+      var parsed = JSON.parse(msg);
+      matrixReceived = parsed.message;
+      // matrixReceived = JSON.parse(msg);
   });
 
   socket.on('time', function (data) {
