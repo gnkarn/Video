@@ -62,6 +62,10 @@ io.on('connection', function(socket) {
     //console.log('recibido :', msg.length);
     // change for a stringify version
     socket.send('{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
+    socket.emit('message', {
+        type: WStype_TEXT,
+        message: msg
+    });
   });
 });
 
