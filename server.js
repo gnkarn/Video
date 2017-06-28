@@ -63,7 +63,7 @@ io.on('connection', function (socket) {
     // change for a stringify version
     //socket.send('{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
     // emit es una prueba para ver como reacciona el ESP
-    socket.volatile.emit('message', {
+    socket.emit('message', {
        'type': WStype_TEXT,
        'message': msg
     });
