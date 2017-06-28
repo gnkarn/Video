@@ -73,7 +73,7 @@ function setup() {
     footer1.html('descripcion :' + data.description);
   });
 
-  socket.on('message', function (msg) {
+  socket.on('messages', function (msg) {
     var footer2 = select('#footer2');
     footer2.html('FR= ' + floor(frameRate()));
       console.log('recibido :', msg.length);
