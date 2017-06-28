@@ -61,12 +61,12 @@ io.on('connection', function (socket) {
   socket.on('msgMatrixAserver', function (msg) {
     //console.log('recibido :', msg.length);
     // change for a stringify version
-    socket.send('{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
+    //socket.send('{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
     // emit es una prueba para ver como reacciona el ESP
-    //socket.emit('message', {
-      //  'type': WStype_TEXT,
-      //  'message': msg
-    //});
+    socket.volatile.emit('message', {
+       'type': WStype_TEXT,
+       'message': msg
+    });
   });
 });
 
