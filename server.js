@@ -64,7 +64,7 @@ io.on('connection', function (socket) {
     //socket.send('{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
     // emit es una prueba para ver como reacciona el ESP
     socket.emit('message', {
-       type: WStype_TEXT,
+       type: 'WStype_TEXT',
        message: msg
     });
   });
