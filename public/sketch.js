@@ -87,7 +87,7 @@ function setup() {
      var parsed = JSON.parse(data);
      var time = parsed.message;
     footer3.html('time = ' + time);
-      console.log('date :', data);
+      console.log('date :', time);
 
   });
 }
