@@ -67,5 +67,5 @@ io.on('connection', function(socket) {
   });
 });
 
-setInterval(() => io.emit('time', '{"msgName": "time", "type": 3, "message": ' + new Date().toTimeString()) + '}', 1000);
+setInterval(() => io.emit('time', '{"msgName": "time", "type": 3, "message": ' + Date().toTimeString()) + '}', 1000);
 //setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
