@@ -62,9 +62,10 @@ io.on('connection', function(socket) {
     //console.log('recibido :', msg.length);
     // change for a stringify version
     //socket.send('{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
-    // emit es una prueba para ver como reacciona el ESP
+    // emit es una prueba para ver como reacciona el ESP funcionaok
     socket.emit('messages', '{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
   });
 });
 
-setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+setInterval(() => io.emit('time', '{"msgName": "msgVideo", "type": 3, "message": ' + new Date().toTimeString()) + '}', 1000);
+//setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
