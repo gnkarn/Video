@@ -85,8 +85,8 @@ function setup() {
   socket.on('time', function (data) {
     var footer3 = select('#footer3');
     var parsed = JSON.parse(data);
-    footer3.html ('time = ' +  parsed.message);
-      console.log('date :', parsed.message);
+    footer3.html ('time = ' + parsed.message);
+      console.log('date :', data);
 
   });
 }
