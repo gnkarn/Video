@@ -27,8 +27,8 @@ const INDEX = path.join(__dirname, '/public/index.html');
 // viewed at http://localhost:8080
 var server = app
   .use((req, res) => res.sendFile(INDEX))
-  .listen(process.env.PORT || 3000, function() {
-    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+  .listen(process.env.PORT || 3000, function () {
+    console.log('Express server listening on port %d in %s mode', this.address().port, app.settings.env);
   });
 
 var clients = 0;
@@ -41,7 +41,7 @@ var io = socket(server);
 //var server = app.listen(8080);
 console.log('VIDEO socket server running');
 
-io.on('connection', function(socket) {
+io.on('connection', function (socket) {
   console.log('Client connected');
   clients++;
   socket.emit('newclientconnect', {
@@ -50,7 +50,7 @@ io.on('connection', function(socket) {
   socket.emit('newclientconnect', {
     description: clients + ' clients connected!'
   });
-  socket.on('disconnect', function() {
+  socket.on('disconnect', function () {
     console.log('Client disconnected');
     clients--;
     socket.emit('newclientconnect', {
@@ -58,7 +58,7 @@ io.on('connection', function(socket) {
     });
   });
   // once matrix is received from source it is send back to all clients
-  socket.on('msgMatrixAserver', function(msg) {
+  socket.on('msgMatrixAserver', function (msg) {
     //console.log('recibido :', msg.length);
     // change for a stringify version
     //socket.send('{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
