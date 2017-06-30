@@ -67,8 +67,7 @@ io.on('connection', function (socket) {
   });
 
   // test de envio  como array
-  socket.on('msgArray1', function (msg) {
-    console.log('Array1 recibido :', msg.length);
+  socket.on('msgArray1', function (msg) { 
     socket.emit('msgArray2', msg);
   });
 });
