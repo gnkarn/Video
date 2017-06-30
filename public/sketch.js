@@ -82,6 +82,16 @@ function setup() {
       // matrixReceived = JSON.parse(msg);
   });
 
+  // recibe matrix como array ( test)
+  socket.on('msgArray2', function (msg) {
+    var footer2 = select('#footer2');
+    footer2.html('FRarray= ' + floor(frameRate()));
+      console.log('recibido array:', msg.length);
+      //var parsed = JSON.parse(msg);
+      matrixReceived = msg;
+      // matrixReceived = JSON.parse(msg);
+  });
+
   socket.on('time', function (data) {
     var footer3 = select('#footer3');
      var parsed = JSON.parse(data);
@@ -126,6 +136,7 @@ function draw() {
   }
   // sends Matrix pixel data to server as 1 matrix per frame
   myJSON = JSON.stringify(ledMatrix);
-  socket.emit('msgMatrixAserver', myJSON);
+  // socket.emit('msgMatrixAserver', myJSON); // * original ok
+  socket.emit('msgArray1', ledMatrix); // testing array
   // console.log(myJSON);
 }
