@@ -65,6 +65,12 @@ io.on('connection', function (socket) {
     // emit es una prueba para ver como reacciona el ESP funcionaok
     socket.emit('messages', '{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
   });
+
+  // test de envio  como array
+  socket.on('msgArray1', function (msg) {
+    console.log('Array1 recibido :', msg.length);
+    socket.emit('msgArray2', msg);
+  });
 });
 
 setInterval(() => io.emit('time', JSON.stringify({'msgName': 'time', 'type': 3, 'message': new Date().toTimeString()})), 1000);
