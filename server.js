@@ -35,7 +35,7 @@ var myJSON; // contine el mensaje desde el servidor a los clientes
 
 // Create Websocket server
 //The WebSocket server takes an HTTP server as an argument so that it can listen for ‘upgrade’ events:
-const wss = new SocketServer ({
+const wss = new WebSocketServer ({
   server
 });
 //var server    = app.listen(3000);
