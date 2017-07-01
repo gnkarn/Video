@@ -1,11 +1,23 @@
-// prepare the server on port 3000
+// prepare the HTTP server on port 3000
+//We need an HTTP server to do two things: serve our client-side assets
+//and provide a hook for the WebSocket server to monitor for upgrade requests
 var express = require('express');
 
 // http.createServer(app).listen(8080,"192.168.0.16");
 // var server = http.Server(app);
 // use the following for Heroku
 var app = express(); // made express aplication and create HTTP server
+var path = require('path');
+const INDEX = path.join(__dirname, '/public/index.html');
 
+// viewed at http://localhost:8080
+var server = app
+  .use((req, res) => res.sendFile(INDEX))
+  .listen(process.env.PORT || 3000, function() {
+    console.log('Express server listening on port %d in %s mode', this.address().port, app.settings.env);
+  });
+
+var clients = 0;
 
 
 // llama la funcion socket con la funcion server como argumento
@@ -21,27 +33,17 @@ var myJSON; // contine el mensaje desde el servidor a los clientes
 //app.use(express.static('public'));
 app.use(express.static(__dirname + '/public'));
 
-var path = require('path');
-const INDEX = path.join(__dirname, '/public/index.html');
 
-// viewed at http://localhost:8080
-var server = app
-  .use((req, res) => res.sendFile(INDEX))
-  .listen(process.env.PORT || 3000, function () {
-    console.log('Express server listening on port %d in %s mode', this.address().port, app.settings.env);
-  });
-
-var clients = 0;
 
 // Create Websocket server
-//The Socket.io server takes an HTTP server as an argument so that it can listen for socket.io-related requests:
-var io = socket(server);
+//The WebSocket server takes an HTTP server as an argument so that it can listen for ‘upgrade’ events:
+const wss = new SocketServer({ server });
 //var server    = app.listen(3000);
 
 //var server = app.listen(8080);
 console.log('VIDEO socket server running');
 
-io.on('connection', function (socket) {
+wss.on('connection', function(socket) {
   console.log('Client connected');
   clients++;
   socket.emit('newclientconnect', {
@@ -50,7 +52,7 @@ io.on('connection', function (socket) {
   socket.emit('newclientconnect', {
     description: clients + ' clients connected!'
   });
-  socket.on('disconnect', function () {
+  socket.on('disconnect', function() {
     console.log('Client disconnected');
     clients--;
     socket.emit('newclientconnect', {
@@ -58,7 +60,7 @@ io.on('connection', function (socket) {
     });
   });
   // once matrix is received from source it is send back to all clients
-  socket.on('msgMatrixAserver', function (msg) {
+  socket.on('msgMatrixAserver', function(msg) {
     //console.log('recibido :', msg.length);
     // change for a stringify version
     //socket.send('{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
@@ -67,10 +69,14 @@ io.on('connection', function (socket) {
   });
 
   // test de envio  como array
-  socket.on('msgArray1', function (msg) { 
+  socket.on('msgArray1', function(msg) {
     socket.emit('msgArray2', msg);
   });
 });
 
-setInterval(() => io.emit('time', JSON.stringify({'msgName': 'time', 'type': 3, 'message': new Date().toTimeString()})), 1000);
+setInterval(() => io.emit('time', JSON.stringify({
+  'msgName': 'time',
+  'type': 3,
+  'message': new Date().toTimeString()
+})), 1000);
 //setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
