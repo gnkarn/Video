@@ -23,7 +23,7 @@ var clients = 0;
 // llama la funcion socket con la funcion server como argumento
 // io es ahora organiza el intercambio de datos llamando a la funcion socket
 // import socket library
-var socket = require('socket.io');
+
 const WStype_TEXT = 3;
 
 var myJSON; // contine el mensaje desde el servidor a los clientes
@@ -37,7 +37,7 @@ app.use(express.static(__dirname + '/public'));
 
 // Create Websocket server
 //The WebSocket server takes an HTTP server as an argument so that it can listen for ‘upgrade’ events:
-const wss = new SocketServer({
+const wss = new SocketServer ({
   server
 });
 //var server    = app.listen(3000);
