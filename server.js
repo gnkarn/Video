@@ -10,6 +10,11 @@ var app = express(); // made express aplication and create HTTP server
 var path = require('path');
 const INDEX = path.join(__dirname, '/public/index.html');
 
+
+// todo lo que esta el directorio public , los usuarios lo ven directamente con la app
+//app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
+
 // viewed at http://localhost:8080
 var server = app
   .use((req, res) => res.sendFile(INDEX))
@@ -27,13 +32,6 @@ var clients = 0;
 const WStype_TEXT = 3;
 
 var myJSON; // contine el mensaje desde el servidor a los clientes
-
-
-// todo lo que esta el directorio public , los usuarios lo ven directamente con la app
-//app.use(express.static('public'));
-app.use(express.static(__dirname + '/public'));
-
-
 
 // Create Websocket server
 //The WebSocket server takes an HTTP server as an argument so that it can listen for ‘upgrade’ events:
