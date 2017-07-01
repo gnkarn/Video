@@ -2,6 +2,7 @@
 //We need an HTTP server to do two things: serve our client-side assets
 //and provide a hook for the WebSocket server to monitor for upgrade requests
 var express = require('express');
+const WebSocketServer = require('ws').Server;
 
 // http.createServer(app).listen(8080,"192.168.0.16");
 // var server = http.Server(app);
@@ -35,7 +36,7 @@ var myJSON; // contine el mensaje desde el servidor a los clientes
 
 // Create Websocket server
 //The WebSocket server takes an HTTP server as an argument so that it can listen for ‘upgrade’ events:
-const wss = new WebSocketServer ({
+const wss = new WebSocketServer({
   server
 });
 //var server    = app.listen(3000);
