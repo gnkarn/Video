@@ -70,7 +70,7 @@ function setup () {
   }
   console.log(ledMatrix);
 
-  ws.on('newclientconnect', function (data) {
+  ws.onmessage('newclientconnect', function (data) {
     var footer1 = select('#footer1');
     footer1.html('descripcion :' + data.description);
   });
@@ -85,7 +85,7 @@ function setup () {
   });
 
   // recibe matrix como array ( test)
-  ws.on('msgArray2', function (msg) {
+  ws.onmessage('msgArray2', function (msg) {
     var footer2 = select('#footer2');
     footer2.html('FRarray= ' + floor(frameRate()));
       console.log('recibido array:', msg.length);
@@ -94,7 +94,7 @@ function setup () {
       // matrixReceived = JSON.parse(msg);
   });
 
-  ws.on('time', function (data) {
+  ws.onmessage('time', function (data) {
     var footer3 = select('#footer3');
      var parsed = JSON.parse(data);
      var time = parsed.message;
