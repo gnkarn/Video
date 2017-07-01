@@ -53,7 +53,7 @@ wss.on('connection', (ws) => {
   socket.send('newclientconnect', {
     description: clients + ' clients connected!'
   });
-  ws.on ('disconnect', function () {
+  wss.on ('disconnect', function () {
     console.log('Client disconnected');
     clients--;
     socket.emit('newclientconnect', {
@@ -61,23 +61,23 @@ wss.on('connection', (ws) => {
     });
   });
   // once matrix is received from source it is send back to all clients
-  ws.on('msgMatrixAserver', function (msg) {
+  wss.on('msgMatrixAserver', function (msg) {
     //console.log('recibido :', msg.length);
     // change for a stringify version
     //socket.send('{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
     // emit es una prueba para ver como reacciona el ESP funcionaok
-    ws.send('messages', '{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
+    wss.send('messages', '{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
   });
 
   // test de envio  como array
-  ws.on('msgArray1', function (msg) {
+  wss.on('msgArray1', function (msg) {
     wss.send('msgArray2', msg);
   });
 });
 
 setInterval(() => {
       wss.clients.forEach((client) => {
-        wss.send('time', JSON.stringify({
+        client.send('time', JSON.stringify({
             'msgName': 'time',
             'type': 3,
             'message': new Date().toTimeString()
