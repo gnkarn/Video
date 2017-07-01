@@ -13,7 +13,7 @@ const INDEX = path.join(__dirname, '/public/index.html');
 // viewed at http://localhost:8080
 var server = app
   .use((req, res) => res.sendFile(INDEX))
-  .listen(process.env.PORT || 3000, function() {
+  .listen(process.env.PORT || 3000, function () {
     console.log('Express server listening on port %d in %s mode', this.address().port, app.settings.env);
   });
 
@@ -37,22 +37,24 @@ app.use(express.static(__dirname + '/public'));
 
 // Create Websocket server
 //The WebSocket server takes an HTTP server as an argument so that it can listen for ‘upgrade’ events:
-const wss = new SocketServer({ server });
+const wss = new SocketServer({
+  server
+});
 //var server    = app.listen(3000);
 
 //var server = app.listen(8080);
 console.log('VIDEO socket server running');
 
-wss.on('connection', function(socket) {
+wss.on('connection', (ws) => {
   console.log('Client connected');
   clients++;
   socket.emit('newclientconnect', {
     description: 'Hey, welcome!'
   });
-  socket.emit('newclientconnect', {
+  socket.send('newclientconnect', {
     description: clients + ' clients connected!'
   });
-  socket.on('disconnect', function() {
+  ws.on ('disconnect', function () {
     console.log('Client disconnected');
     clients--;
     socket.emit('newclientconnect', {
@@ -60,23 +62,28 @@ wss.on('connection', function(socket) {
     });
   });
   // once matrix is received from source it is send back to all clients
-  socket.on('msgMatrixAserver', function(msg) {
+  ws.on('msgMatrixAserver', function (msg) {
     //console.log('recibido :', msg.length);
     // change for a stringify version
     //socket.send('{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
     // emit es una prueba para ver como reacciona el ESP funcionaok
-    socket.emit('messages', '{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
+    ws.send('messages', '{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
   });
 
   // test de envio  como array
-  socket.on('msgArray1', function(msg) {
-    socket.emit('msgArray2', msg);
+  ws.on('msgArray1', function (msg) {
+    wss.send('msgArray2', msg);
   });
 });
 
-setInterval(() => io.emit('time', JSON.stringify({
-  'msgName': 'time',
-  'type': 3,
-  'message': new Date().toTimeString()
-})), 1000);
-//setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+setInterval(() => {
+      wss.clients.forEach((client) => {
+        wss.send('time', JSON.stringify({
+            'msgName': 'time',
+            'type': 3,
+            'message': new Date().toTimeString()
+          }))
+        })
+      }, 1000);
+
+    //setInterval(() => io.emit('time', new Date().toTimeString()), 1000);

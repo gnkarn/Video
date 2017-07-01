@@ -1,7 +1,9 @@
 var video;
 
 var myJSON;
-var socket = io();
+
+var HOST = location.origin.replace(/^http/, 'ws');
+var ws = new WebSocket(HOST);
 
 var ledMatrixWidth = 20;
 var ledMatrixHeight = 24;
@@ -25,13 +27,13 @@ var matrixReceived = [lcolor];
 var ledMatrix = [lcolor];
 
 // led element not needed so far
-function LedElement(x, y, lcolor) {
+function LedElement (x, y, lcolor) {
   this.x = x;
   this.y = y;
   this.lcolor = lcolor;
 }
 
-function setup() {
+function setup () {
 
   // connecto al servidor de socket, default is fixed ip
   //if (io.connect('192.168.0.16:3000')) {
@@ -68,12 +70,12 @@ function setup() {
   }
   console.log(ledMatrix);
 
-  socket.on('newclientconnect', function (data) {
+  ws.on('newclientconnect', function (data) {
     var footer1 = select('#footer1');
     footer1.html('descripcion :' + data.description);
   });
 
-  socket.on('messages', function (msg) {
+  ws.on('messages', function (msg) {
     var footer2 = select('#footer2');
     footer2.html('FR= ' + floor(frameRate()));
       console.log('recibido :', msg.length);
@@ -83,7 +85,7 @@ function setup() {
   });
 
   // recibe matrix como array ( test)
-  socket.on('msgArray2', function (msg) {
+  ws.on('msgArray2', function (msg) {
     var footer2 = select('#footer2');
     footer2.html('FRarray= ' + floor(frameRate()));
       console.log('recibido array:', msg.length);
@@ -92,7 +94,7 @@ function setup() {
       // matrixReceived = JSON.parse(msg);
   });
 
-  socket.on('time', function (data) {
+  ws.on('time', function (data) {
     var footer3 = select('#footer3');
      var parsed = JSON.parse(data);
      var time = parsed.message;
@@ -137,6 +139,6 @@ function draw() {
   // sends Matrix pixel data to server as 1 matrix per frame
   myJSON = JSON.stringify(ledMatrix);
   // socket.emit('msgMatrixAserver', myJSON); // * original ok
-  socket.emit('msgArray1', ledMatrix); // testing array
+  ws.send('msgArray1', ledMatrix); // testing array
   // console.log(myJSON);
 }
