@@ -37,8 +37,15 @@ var myJSON; // contine el mensaje desde el servidor a los clientes
 // Create Websocket server
 //The WebSocket server takes an HTTP server as an argument so that it can listen for ‘upgrade’ events:
 const wss = new WebSocketServer({
-  server
+  server,
+  autoAcceptConnections: true
 });
+
+function originIsAllowed (origin) {
+  // put logic here to detect whether the specified origin is allowed
+  return true;
+}
+
 //var server    = app.listen(3000);
 
 //var server = app.listen(8080);
@@ -53,7 +60,7 @@ wss.on('connection', (ws) => {
   socket.send('newclientconnect', {
     description: clients + ' clients connected!'
   });
-  wss.on ('disconnect', function () {
+  wss.on('disconnect', function () {
     console.log('Client disconnected');
     clients--;
     socket.emit('newclientconnect', {
@@ -75,14 +82,25 @@ wss.on('connection', (ws) => {
   });
 });
 
-setInterval(() => {
-      wss.clients.forEach((client) => {
-        client.send('time', JSON.stringify({
-            'msgName': 'time',
-            'type': 3,
-            'message': new Date().toTimeString()
-          }))
-        })
-      }, 1000);
+function heartbeat () {
+  this.isAlive = true;
+}
 
-    //setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+wss.on('connection', function connection (ws, req) {
+  ws.isAlive = true;
+  ws.on('pong', heartbeat);
+  const ip = req.connection.remoteAddress;
+});
+
+const interval = setInterval(function ping () {
+  wss.clients.forEach(function each (ws) {
+    if (ws.isAlive === false) return ws.terminate();
+    client.send('time', JSON.stringify({
+      'msgName': 'time',
+      'type': 3,
+      'message': new Date().toLocaleTimeString()
+    }));
+    ws.isAlive = false;
+    ws.ping('', false, true);
+  });
+}, 30000);

@@ -1,7 +1,8 @@
 var video;
 
 var myJSON;
-
+// https://www.npmjs.com/package/ws
+var  WebSocket = require('ws');
 var HOST = location.origin.replace(/^http/, 'ws');
 var ws = new WebSocket(HOST);
 
@@ -27,13 +28,14 @@ var matrixReceived = [lcolor];
 var ledMatrix = [lcolor];
 
 // led element not needed so far
-function LedElement (x, y, lcolor) {
+function LedElement(x, y, lcolor) {
   this.x = x;
   this.y = y;
   this.lcolor = lcolor;
 }
 
-function setup () {
+
+function setup() {
 
   // connecto al servidor de socket, default is fixed ip
   //if (io.connect('192.168.0.16:3000')) {
@@ -51,7 +53,7 @@ function setup () {
 
   video.size(myCanvas.width / hScale, myCanvas.height / vScale); // sets the video dom element size
   //video.position(0, 0);
-    video.parent('#canvas2')
+  video.parent('#canvas2');
 
   // set up the matrix object and all elements
   for (var y = 0; y < video.height; y++) {
@@ -70,38 +72,39 @@ function setup () {
   }
   console.log(ledMatrix);
 
-  ws.onmessage('newclientconnect', function (data) {
+  ws.onopen = function(evt) {
     var footer1 = select('#footer1');
-    footer1.html('descripcion :' + data.description);
-  });
+    footer1.html('descripcion :' + evt.data);
+  };
 
-  ws.on('messages', function (msg) {
-    var footer2 = select('#footer2');
-    footer2.html('FR= ' + floor(frameRate()));
-      console.log('recibido :', msg.length);
-      var parsed = JSON.parse(msg);
-      matrixReceived = parsed.message;
-      // matrixReceived = JSON.parse(msg);
-  });
+  ws.onmessage = function(evt) {
+    if (typeof evt.data === string) {
 
-  // recibe matrix como array ( test)
-  ws.onmessage('msgArray2', function (msg) {
-    var footer2 = select('#footer2');
-    footer2.html('FRarray= ' + floor(frameRate()));
-      console.log('recibido array:', msg.length);
-      //var parsed = JSON.parse(msg);
-      matrixReceived = msg;
-      // matrixReceived = JSON.parse(msg);
-  });
+      //create a JSON object
+      console.log(evt.data);
+      var JsonObject = JSON.parse(evt.data);
+      var msgName = JsonObject.msgName;
+      var msgContent = JsonObject.msgContent;
 
-  ws.onmessage('time', function (data) {
-    var footer3 = select('#footer3');
-     var parsed = JSON.parse(data);
-     var time = parsed.message;
-    footer3.html('time = ' + time);
-      console.log('date :', time);
+      switch (msgName) {
+        case "msgArray2":
+          var footer2 = select('#footer2');
+          footer2.html('FRarray= ' + floor(frameRate()));
+          console.log('recibido array:', msg.length);
+          //var parsed = JSON.parse(msg);
+          matrixReceived = msgContent;
+          break;
 
-  });
+        case "time":
+          var footer3 = select('#footer3');
+          var time = msgContent;
+          footer3.html('time = ' + time);
+          console.log('date :', time);
+          break;
+        default:
+      }
+    }
+  };
 }
 
 function draw() {
@@ -136,6 +139,7 @@ function draw() {
       rect(x * (hScale), y * (vScale), hScale, vScale);
     }
   }
+
   // sends Matrix pixel data to server as 1 matrix per frame
   myJSON = JSON.stringify(ledMatrix);
   // socket.emit('msgMatrixAserver', myJSON); // * original ok
