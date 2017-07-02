@@ -143,7 +143,7 @@ function draw() {
   // sends Matrix pixel data to server as 1 matrix per frame
 
   // socket.emit('msgMatrixAserver', myJSON); // * original ok
-  stringify(JSON.stringify('{"msgName": "msgArray1", "type": 3, "message": ' + msg + '}'));
+  send(JSON.stringify('{"msgName": "msgArray1", "type": 3, "message": ' + msg + '}'));
 
   // console.log(myJSON);
 }
