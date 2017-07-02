@@ -2,7 +2,7 @@ var video;
 
 var myJSON;
 // https://www.npmjs.com/package/ws
-var  WebSocket = require('ws');
+
 var HOST = location.origin.replace(/^http/, 'ws');
 var ws = new WebSocket(HOST);
 
@@ -84,7 +84,7 @@ function setup() {
       console.log(evt.data);
       var JsonObject = JSON.parse(evt.data);
       var msgName = JsonObject.msgName;
-      var msgContent = JsonObject.msgContent;
+      var msgContent = JsonObject.message;
 
       switch (msgName) {
         case "msgArray2":
@@ -141,8 +141,9 @@ function draw() {
   }
 
   // sends Matrix pixel data to server as 1 matrix per frame
-  myJSON = JSON.stringify(ledMatrix);
+
   // socket.emit('msgMatrixAserver', myJSON); // * original ok
-  ws.send('msgArray1', ledMatrix); // testing array
+  stringify(JSON.stringify('{"msgName": "msgArray1", "type": 3, "message": ' + msg + '}'));
+
   // console.log(myJSON);
 }
