@@ -34,6 +34,16 @@ function LedElement(x, y, lcolor) {
   this.lcolor = lcolor;
 }
 
+function safelyParseJson(json) {
+  try {
+    var JsonObject = JSON.parse(evt.data);
+    var msgName = JsonObject.msgName;
+    var msgContent = JsonObject.message;
+  } catch (e) {
+    alert(e.message); // error in the above string (in this case, yes)!
+  }
+  return JsonObject;
+}
 
 function setup() {
 
@@ -82,7 +92,8 @@ function setup() {
 
       //create a JSON object
       console.log(evt.data);
-      var JsonObject = JSON.parse(evt.data);
+
+      safelyParseJson(evt.data);
       var msgName = JsonObject.msgName;
       var msgContent = JsonObject.message;
 

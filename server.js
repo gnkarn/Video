@@ -19,7 +19,7 @@ app.use(express.static(__dirname + '/public'));
 // viewed at http://localhost:8080
 var server = app
   .use((req, res) => res.sendFile(INDEX))
-  .listen(process.env.PORT || 3000, function () {
+  .listen(process.env.PORT || 3000, function() {
     console.log('Express server listening on port %d in %s mode', this.address().port, app.settings.env);
   });
 
@@ -30,18 +30,18 @@ var clients = 0;
 // io es ahora organiza el intercambio de datos llamando a la funcion socket
 // import socket library
 
-const WStype_TEXT = 3;
+var WStype_TEXT = 3;
 
 var myJSON; // contine el mensaje desde el servidor a los clientes
 
 // Create Websocket server
 //The WebSocket server takes an HTTP server as an argument so that it can listen for ‘upgrade’ events:
-const wss = new WebSocketServer({
+var wss = new WebSocketServer({
   server,
   autoAcceptConnections: true
 });
 
-function originIsAllowed (origin) {
+function originIsAllowed(origin) {
   // put logic here to detect whether the specified origin is allowed
   return true;
 }
@@ -51,56 +51,59 @@ function originIsAllowed (origin) {
 //var server = app.listen(8080);
 console.log('VIDEO socket server running');
 
-wss.on('connection', (ws) => {
-  console.log('Client connected');
-  clients++;
-  socket.emit('newclientconnect', {
-    description: 'Hey, welcome!'
-  });
-  socket.send('newclientconnect', {
-    description: clients + ' clients connected!'
-  });
-  wss.on('disconnect', function () {
-    console.log('Client disconnected');
-    clients--;
-    socket.emit('newclientconnect', {
-      description: clients + ' clients connected!'
-    });
-  });
-  // once matrix is received from source it is send back to all clients
-  wss.on('msgMatrixAserver', function (msg) {
-    //console.log('recibido :', msg.length);
-    // change for a stringify version
-    //socket.send('{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
-    // emit es una prueba para ver como reacciona el ESP funcionaok
-    wss.send('messages', '{"msgName": "msgVideo", "type": 3, "message": ' + msg + '}');
-  });
-
-  // test de envio  como array
-  wss.on('msgArray1', function (msg) {
-    wss.send('msgArray2', msg);
-  });
-});
-
-function heartbeat () {
+function heartbeat() {
   this.isAlive = true;
 }
 
-wss.on('connection', function connection (ws, req) {
-  ws.isAlive = true;
-  ws.on('pong', heartbeat);
-  const ip = req.connection.remoteAddress;
-});
-
-const interval = setInterval(function ping () {
-  wss.clients.forEach(function each (ws) {
+var interval = setInterval(() => {
+  wss.clients.forEach((client) => {
     if (ws.isAlive === false) return ws.terminate();
-    client.send('time', JSON.stringify({
+    client.send(JSON.stringify({
       'msgName': 'time',
       'type': 3,
       'message': new Date().toLocaleTimeString()
     }));
-    ws.isAlive = false;
-    ws.ping('', false, true);
+    //ws.isAlive = false;
+    //ws.ping('', false, true);
   });
 }, 30000);
+
+
+wss.on('connection', function connection(ws, req) {
+      console.log('Client connected');
+      clients++;
+      ws.isAlive = true;
+      ws.on('pong', heartbeat);
+      var ip = req.connection.remoteAddress;
+      socket.send({
+        'msgName': 'newclientconnect',
+        'type': 3,
+        'message': clients + ' clients connected!'
+      });
+
+      wss.on('close', () => console.log('Client disconnected'); console.log('Client disconnected'); clients--; ws.send({
+        'msgName': 'newclientconnect',
+        'type': 3,
+        'message': clients + ' clients connected!'
+      });)
+
+      // once matrix is received from source it is send back to all clients
+
+      // test de envio  como array
+      wss.on('message', function(msg) {
+
+            var JsonObject = JSON.parse(msg.data);
+            var msgName = JsonObject.msgName;
+            var msgContent = JsonObject.message;
+
+            switch (msgName) {
+              case "msgArray1":
+                wss.send(JSON.stringify({
+                  'msgName': 'msgArray2',
+                  'type': 3,
+                  'message': msg.message
+                }));
+                break;
+                default : //;
+
+            });
