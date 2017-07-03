@@ -85,7 +85,7 @@ wss.on('connection', function connection(ws, req) {
         'msgName': 'newclientconnect',
         'type': 3,
         'message': clients + ' clients connected!'
-      });)
+      }));
 
       // once matrix is received from source it is send back to all clients
 
