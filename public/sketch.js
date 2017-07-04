@@ -50,6 +50,7 @@ function safelyParseJson(json) {
 }
 
 function setup() {
+  frameRate(10);
   // connecto al servidor de socket, default is fixed ip
   //if (io.connect('192.168.0.16:3000')) {
   //socket = io.connect('192.168.0.16:3000')
@@ -90,6 +91,7 @@ function setup() {
     var footer1 = select('#footer1');
     footer1.html('descripcion :' + evt.type);
   };
+
 
   ws.onmessage = function(evt) {
     //if (typeof evt.data === 'string') { // utf8 o string
