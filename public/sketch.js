@@ -24,7 +24,7 @@ var vScale = myCanvasH / ledMatrixHeight;
 //};
 
 // reducido
-var lcolor ={0,0,0};
+var lcolor =[0,0,0];
 
 var matrixReceived = [lcolor];
 
