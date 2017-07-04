@@ -97,8 +97,10 @@ wss.on('connection', function connection(ws, req) {
   console.log(clients + ' Client connected');
   ws.isAlive = true;
   ws.on('pong', heartbeat);
+
   var ip = req.connection.remoteAddress;
-  console.log(ip);
+  console.log(ws._socket.remoteAddress);
+  console.log('ip ' + ip);
   const location = url.parse(req.url, true);
   // You might use location.query.access_token to authenticate or share sessions
   // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
