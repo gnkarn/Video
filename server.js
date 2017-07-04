@@ -129,9 +129,9 @@ wss.on('connection', function connection(ws, req) {
 
   // test de envio  como array
   ws.on('message', function(msg) {
-    console.log('message received ');
+    //console.log('message received ');
     var JsonObject = safelyParseJson(msg);
-    console.log("server: " + msg); // for debug
+    //console.log("server: " + msg); // for debug
     if (JsonObject) {
       var msgName = JsonObject.msgName;
       var msgContent = JsonObject.message;

@@ -86,7 +86,7 @@ function setup() {
   ws.onmessage = function(evt) {
     //if (typeof evt.data === 'string') { // utf8 o string
     //create a JSON object
-    console.log(evt);
+    //console.log(evt);
 
     var JsonObject = safelyParseJson(evt.data);
     var msgName = JsonObject.msgName;
@@ -96,8 +96,7 @@ function setup() {
       case "msgArray2":
         var footer2 = select('#footer2');
         footer2.html('FRarray= ' + floor(frameRate()));
-        console.log('recibido array:', evt.length);
-        //var parsed = JSON.parse(msg);
+        //console.log('recibido array:', evt.length);
         matrixReceived = msgContent;
         break;
 
@@ -105,7 +104,7 @@ function setup() {
         var footer3 = select('#footer3');
         var time = msgContent;
         footer3.html('time = ' + time);
-        console.log('date :', time);
+        //console.log('date :', time);
         break;
       default:
     }
@@ -153,7 +152,7 @@ function draw() {
     'message': ledMatrix
   };
     ws.send(JSON.stringify(obj));
-    console.log('.');
+    //console.log('.');
   }
   // console.log(myJSON);
 }
