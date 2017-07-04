@@ -2,15 +2,19 @@
 //We need an HTTP server to do two things: serve our client-side assets
 //and provide a hook for the WebSocket server to monitor for upgrade requests
 var express = require('express');
-const WebSocketServer = require('ws').Server;
-
+const Websocket = require('ws');
+//const WebSocketServer = require('ws').Server;
+// WebSocket server is tied to a HTTP server. WebSocket
+// request is just an enhanced HTTP request. For more info
+// http://tools.ietf.org/html/rfc6455#page-6
+const WebSocketServer = Websocket.Server;
 // http.createServer(app).listen(8080,"192.168.0.16");
 // var server = http.Server(app);
 // use the following for Heroku
 var app = express(); // made express aplication and create HTTP server
 var path = require('path');
 const INDEX = path.join(__dirname, '/public/index.html');
-
+var url = require("url");
 
 // todo lo que esta el directorio public , los usuarios lo ven directamente con la app
 //app.use(express.static('public'));
@@ -40,15 +44,13 @@ var wss = new WebSocketServer({
   server,
   autoAcceptConnections: true
 });
+var clients=[]; // defines the clients array
 
 function originIsAllowed(origin) {
   // put logic here to detect whether the specified origin is allowed
   return true;
 }
 
-//var server    = app.listen(3000);
-
-//var server = app.listen(8080);
 console.log('VIDEO socket server running');
 
 function heartbeat() {
@@ -57,7 +59,7 @@ function heartbeat() {
 
 var interval = setInterval(() => {
   wss.clients.forEach((client) => {
-    if (ws.isAlive === false) return ws.terminate();
+    if (wss.isAlive === false) return wss.terminate();
     client.send(JSON.stringify({
       'msgName': 'time',
       'type': 3,
@@ -66,44 +68,85 @@ var interval = setInterval(() => {
     //ws.isAlive = false;
     //ws.ping('', false, true);
   });
-}, 30000);
+}, 2000);
 
+// server.connections An Array with all connected clients
+// it's useful for broadcasting a message:
+wss.broadcast = function(msg) {
+  for (var i in this.clients)
+  if (client[i].readyState === Websocket.OPEN) {
+    this.clients[i].sendText(msg);
+  }
+  };
+
+
+function safelyParseJson(json) {
+  var JsonObject;
+  try {
+    JsonObject = JSON.parse(json);
+  } catch (e) {
+    console.log(e.message); // error in the above string (in this case, yes)!
+    JsonObject = null;
+  }
+  return JsonObject;
+}
 
 wss.on('connection', function connection(ws, req) {
-      console.log('Client connected');
-      clients++;
-      ws.isAlive = true;
-      ws.on('pong', heartbeat);
-      var ip = req.connection.remoteAddress;
-      socket.send({
-        'msgName': 'newclientconnect',
-        'type': 3,
-        'message': clients + ' clients connected!'
-      });
+  //clients.push(ws);
+  clients++;
+  console.log(clients + ' Client connected');
+  ws.isAlive = true;
+  ws.on('pong', heartbeat);
+  var ip = req.connection.remoteAddress;
+  console.log(ip);
+  const location = url.parse(req.url, true);
+  // You might use location.query.access_token to authenticate or share sessions
+  // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
 
-      wss.on('close', () => console.log('Client disconnected'); console.log('Client disconnected'); clients--; ws.send({
+  ws.send(JSON.stringify({
+    'msgName': 'newclientconnect',
+    'type': 3,
+    'message': clients + ' clients connected!'
+  }));
+
+  ws.on('close', function(connection) {
+    console.log('Client disconnected');
+    clients--;
+    console.log((new Date()) + " Peer " +
+      connection.remoteAddress + " disconnected.");
+
+      wss.clients.forEach((client) => {
+      if (ws.isAlive === false) return ws.terminate();
+      ws.send(JSON.stringify({
         'msgName': 'newclientconnect',
         'type': 3,
         'message': clients + ' clients connected!'
       }));
+    });
+  });
 
-      // once matrix is received from source it is send back to all clients
+  // once matrix is received from source it is send back to all clients
 
-      // test de envio  como array
-      wss.on('message', function(msg) {
-
-            var JsonObject = JSON.parse(msg.data);
-            var msgName = JsonObject.msgName;
-            var msgContent = JsonObject.message;
-
-            switch (msgName) {
-              case "msgArray1":
-                wss.send(JSON.stringify({
-                  'msgName': 'msgArray2',
-                  'type': 3,
-                  'message': msg.message
-                }));
-                break;
-                default : //;
-
-            });
+  // test de envio  como array
+  ws.on('message', function(msg) {
+    console.log('message received ');
+    var JsonObject = safelyParseJson(msg);
+    console.log("server: " + msg); // for debug
+    if (JsonObject) {
+      var msgName = JsonObject.msgName;
+      var msgContent = JsonObject.message;
+      if (msgName != null) {
+        switch (msgName) {
+          case "msgArray1":
+            ws.send(JSON.stringify({
+              'msgName': 'msgArray2',
+              'type': 3,
+              'message': msgContent
+            }));
+            break;
+          default: //;
+        }
+      }
+    }
+  });
+});

@@ -2,7 +2,7 @@ var video;
 
 var myJSON;
 // https://www.npmjs.com/package/ws
-
+// initialize connection to the server
 var HOST = location.origin.replace(/^http/, 'ws');
 var ws = new WebSocket(HOST);
 
@@ -35,32 +35,28 @@ function LedElement(x, y, lcolor) {
 }
 
 function safelyParseJson(json) {
+  var JsonObject ;
   try {
-    var JsonObject = JSON.parse(evt.data);
-    var msgName = JsonObject.msgName;
-    var msgContent = JsonObject.message;
+     JsonObject = JSON.parse(json);
   } catch (e) {
-    alert(e.message); // error in the above string (in this case, yes)!
+    console.log(e.message); // error in the above string (in this case, yes)!
+    JsonObject = null;
   }
   return JsonObject;
 }
 
 function setup() {
-
   // connecto al servidor de socket, default is fixed ip
   //if (io.connect('192.168.0.16:3000')) {
   //socket = io.connect('192.168.0.16:3000')
   //} else {
   //  socket = io.connect('http://localhost:3000');
   //}
-
   myCanvas = createCanvas(myCanvasW, myCanvasH);
   //myCanvas.position(10, 300);
   pixelDensity(1);
   myCanvas.parent('#canvas1');
-
   video = createCapture(VIDEO);
-
   video.size(myCanvas.width / hScale, myCanvas.height / vScale); // sets the video dom element size
   //video.position(0, 0);
   video.parent('#canvas2');
@@ -84,43 +80,41 @@ function setup() {
 
   ws.onopen = function(evt) {
     var footer1 = select('#footer1');
-    footer1.html('descripcion :' + evt.data);
+    footer1.html('descripcion :' + evt.type);
   };
 
   ws.onmessage = function(evt) {
-    if (typeof evt.data === string) {
+    //if (typeof evt.data === 'string') { // utf8 o string
+    //create a JSON object
+    console.log(evt);
 
-      //create a JSON object
-      console.log(evt.data);
+    var JsonObject = safelyParseJson(evt.data);
+    var msgName = JsonObject.msgName;
+    var msgContent = JsonObject.message;
 
-      safelyParseJson(evt.data);
-      var msgName = JsonObject.msgName;
-      var msgContent = JsonObject.message;
+    switch (msgName) {
+      case "msgArray2":
+        var footer2 = select('#footer2');
+        footer2.html('FRarray= ' + floor(frameRate()));
+        console.log('recibido array:', evt.length);
+        //var parsed = JSON.parse(msg);
+        matrixReceived = msgContent;
+        break;
 
-      switch (msgName) {
-        case "msgArray2":
-          var footer2 = select('#footer2');
-          footer2.html('FRarray= ' + floor(frameRate()));
-          console.log('recibido array:', msg.length);
-          //var parsed = JSON.parse(msg);
-          matrixReceived = msgContent;
-          break;
-
-        case "time":
-          var footer3 = select('#footer3');
-          var time = msgContent;
-          footer3.html('time = ' + time);
-          console.log('date :', time);
-          break;
-        default:
-      }
+      case "time":
+        var footer3 = select('#footer3');
+        var time = msgContent;
+        footer3.html('time = ' + time);
+        console.log('date :', time);
+        break;
+      default:
     }
+    //}
   };
 }
 
 function draw() {
   background(100);
-
   video.loadPixels();
   loadPixels();
   for (var y = 0; y < video.height; y++) {
@@ -150,11 +144,16 @@ function draw() {
       rect(x * (hScale), y * (vScale), hScale, vScale);
     }
   }
-
   // sends Matrix pixel data to server as 1 matrix per frame
-
   // socket.emit('msgMatrixAserver', myJSON); // * original ok
-  ws.send(JSON.stringify('{"msgName": "msgArray1", "type": 3, "message": ' + ledMatrix + '}'));
-
+  if (ws.readyState == 1) {
+    var obj = {
+    'msgName': "msgArray1",
+    'type': 3,
+    'message': ledMatrix
+  };
+    ws.send(JSON.stringify(obj));
+    console.log('.');
+  }
   // console.log(myJSON);
 }
