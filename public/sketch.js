@@ -16,12 +16,16 @@ var h1;
 
 var hScale = myCanvasW / ledMatrixWidth;
 var vScale = myCanvasH / ledMatrixHeight;
+// {r,g,b}
+//var lcolor = {
+//  "r": 0,
+//  "g": 0,
+//  "b": 0
+//};
 
-var lcolor = {
-  "r": 0,
-  "g": 0,
-  "b": 0
-};
+// reducido
+var lcolor ={0,0,0};
+
 var matrixReceived = [lcolor];
 
 // preparo el objeto para el mensaje
@@ -65,15 +69,19 @@ function setup() {
   for (var y = 0; y < video.height; y++) {
     for (var x = 0; x < video.width; x++) {
       var index = (video.width - x + 1 + (y * video.width)) * 4;
-      lcolor.r = x;
-      lcolor.g = y;
-      lcolor.b = 0;
+      //lcolor.r = x;
+      //lcolor.g = y;
+      //lcolor.b = 0;
+      lcolor[0] = x;
+      lcolor[1] = y ;
+      lcolor[2] = 0 ;
       console.log(lcolor);
-      ledMatrix[y * ledMatrixWidth + x] = {
-        "r": lcolor.r,
-        "g": lcolor.g,
-        "b": lcolor.b
-      };
+      //ledMatrix[y * ledMatrixWidth + x] = {
+      //  "r": lcolor.r,
+      //  "g": lcolor.g,
+      //  "b": lcolor.b
+      //};
+      ledMatrix[y * ledMatrixWidth + x] = lcolor;
     }
   }
   console.log(ledMatrix);
@@ -119,17 +127,21 @@ function draw() {
   for (var y = 0; y < video.height; y++) {
     for (var x = 0; x < video.width; x++) {
       var index = (video.width - x + 1 + (y * video.width)) * 4;
-      lcolor.r = video.pixels[index + 0];
-      lcolor.g = video.pixels[index + 1];
-      lcolor.b = video.pixels[index + 2];
+      //lcolor.r = video.pixels[index + 0];
+      //lcolor.g = video.pixels[index + 1];
+      //lcolor.b = video.pixels[index + 2];
       var bright = video.pixels[index + 3]; // (r+g+b)/3;
+      lcolor[0] = video.pixels[index + 0];
+      lcolor[1] = video.pixels[index + 1];
+      lcolor[2] = video.pixels[index + 2];
 
-      ledMatrix[y * ledMatrixWidth + x] = {
-        "r": lcolor.r,
-        "g": lcolor.g,
-        "b": lcolor.b
-      };
+    //  ledMatrix[y * ledMatrixWidth + x] = {
+    //    "r": lcolor.r,
+    //    "g": lcolor.g,
+    //    "b": lcolor.b
+    //  };
 
+      ledMatrix[y * ledMatrixWidth + x] = lcolor;
       // load received matrix instead of original matrix
       //ledMatrix holds de source leds , to be sent to server
       //matrixReceived is the Matrix "rebounded" by the server to clients
@@ -138,7 +150,8 @@ function draw() {
 
       //var w = map(bright, 0, 255, 0, vScale);
       noStroke();
-      fill(lcolor.r, lcolor.g, lcolor.b, bright);
+      // fill(lcolor.r, lcolor.g, lcolor.b, bright);
+      fill(lcolor[0], lcolor[1], lcolor[2], bright);
       //rectMode(CENTER);
       rect(x * (hScale), y * (vScale), hScale, vScale);
     }
