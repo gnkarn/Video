@@ -44,14 +44,14 @@ var wss = new WebSocketServer({
   server,
   autoAcceptConnections: true
 });
-var clients=[]; // defines the clients array
+var clients = []; // defines the clients array
 
 function originIsAllowed(origin) {
   // put logic here to detect whether the specified origin is allowed
   return true;
 }
 
-console.log('VIDEO socket server running');
+console.log('*** VIDEO socket server running ***');
 
 function heartbeat() {
   this.isAlive = true;
@@ -59,14 +59,14 @@ function heartbeat() {
 
 var interval = setInterval(() => {
   wss.clients.forEach((client) => {
-    if (wss.isAlive === false) return wss.terminate();
+    if (wss.isAlive === false) return //wss.terminate();
     client.send(JSON.stringify({
       'msgName': 'time',
       'type': 3,
       'message': new Date().toLocaleTimeString()
     }));
-    //ws.isAlive = false;
-    //ws.ping('', false, true);
+    //wss.isAlive = false;
+    //wss.ping('', false, true);
   });
 }, 2000);
 
@@ -74,10 +74,10 @@ var interval = setInterval(() => {
 // it's useful for broadcasting a message:
 wss.broadcast = function(msg) {
   for (var i in this.clients)
-  if (client[i].readyState === Websocket.OPEN) {
-    this.clients[i].sendText(msg);
-  }
-  };
+    if (client[i].readyState === Websocket.OPEN) {
+      this.clients[i].sendText(msg);
+    }
+};
 
 
 function safelyParseJson(json) {
@@ -114,8 +114,7 @@ wss.on('connection', function connection(ws, req) {
     clients--;
     console.log((new Date()) + " Peer " +
       connection.remoteAddress + " disconnected.");
-
-      wss.clients.forEach((client) => {
+    wss.clients.forEach((client) => {
       if (ws.isAlive === false) return ws.terminate();
       ws.send(JSON.stringify({
         'msgName': 'newclientconnect',
@@ -129,24 +128,28 @@ wss.on('connection', function connection(ws, req) {
 
   // test de envio  como array
   ws.on('message', function(msg) {
+    if (true) {
+      ws.send(msg);
+    } else {
     //console.log('message received ');
-    var JsonObject = safelyParseJson(msg);
-    //console.log("server: " + msg); // for debug
-    if (JsonObject) {
-      var msgName = JsonObject.msgName;
-      var msgContent = JsonObject.message;
-      if (msgName != null) {
-        switch (msgName) {
-          case "msgArray1":
-            ws.send(JSON.stringify({
-              'msgName': 'msgArray2',
-              'type': 3,
-              'message': msgContent
-            }));
-            break;
-          default: //;
+        var JsonObject = safelyParseJson(msg);
+        //console.log("server: " + msg); // for debug
+        if (JsonObject) {
+          var msgName = JsonObject.msgName;
+          var msgContent = JsonObject.message;
+          if (msgName != null) {
+            switch (msgName) {
+              case "msgArray1":
+                ws.send(JSON.stringify({
+                  'msgName': 'msgArray1', // antes msgArray2
+                  'type': 3,
+                  'message': msgContent
+                }));
+                break;
+              default: //;
+            }
+          }
         }
       }
-    }
   });
 });

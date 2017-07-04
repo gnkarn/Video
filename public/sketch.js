@@ -101,7 +101,7 @@ function setup() {
     var msgContent = JsonObject.message;
 
     switch (msgName) {
-      case "msgArray2":
+      case "msgArray1":  // antes msgArray2
         var footer2 = select('#footer2');
         footer2.html('FRarray= ' + floor(frameRate()));
         //console.log('recibido array:', evt.length);
