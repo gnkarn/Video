@@ -95,6 +95,8 @@ function safelyParseJson(json) {
 
 wss.on('connection', function connection(ws, req) {
   //clients.push(ws);
+  var connection = ws.accept('echo-protocol', ws.origin); // accept new connection
+
   clients++;
   console.log(clients + ' Client connected');
   ws.isAlive = true;
