@@ -107,7 +107,7 @@ wss.on('connection', function connection(ws, req) {
   //console.log(ws._socket.remoteAddress);
   console.log('ip ' + ip);
   const location = url.parse(req.url, true);
-  console.log(location);
+  console.log('location : ' + location);
 
   console.log(ws);
   console.log(ws.headers);
