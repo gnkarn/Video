@@ -95,12 +95,28 @@ function safelyParseJson(json) {
 
 wss.on('connection', function connection(ws, req) {
   //clients.push(ws);
-  var connection = ws.accept('echo-protocol', ws.origin); // accept new connection
+  console.log('local adress ');
+  console.log(req.connection.localAddress);
+
+  console.log('remote  port ');
+  console.log(req.connection.remotePort);
+
+  console.log('local  port ');
+  console.log(req.connection.localPort);
+
+  console.log('parametros name ');
+  console.log(ws._socket._sockname);
+  console.log('parametros peername ');
+  console.log(ws._socket._peername);
+
+  console.log('key');
+  console.log(ws._socket._server._connectionKey);
 
   clients++;
   console.log(clients + ' Client connected');
   ws.isAlive = true;
   ws.on('pong', heartbeat);
+
 
   var ip = req.connection.remoteAddress;
   const ip2 = req.headers['x-forwarded-for']; // ver si funciona con heroku
@@ -111,7 +127,7 @@ wss.on('connection', function connection(ws, req) {
   const location = url.parse(req.url, true);
   console.log('location : ' + location);
 
-  console.log(ws);
+  //console.log(ws);
   console.log(ws.headers);
 
   //console.log('key ' + ws.WebSocketServer.connectionKey);
