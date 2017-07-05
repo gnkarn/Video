@@ -115,7 +115,8 @@ wss.on('connection', function connection(ws, req) {
   //console.log('key ' + ws.WebSocketServer.connectionKey);
   //  console.log('name ' + ws.WebSocketServer.peername);
 
-     var userID = ws.req.headers['sec-websocket-key']; // da error no funca
+  //   var userID = ws.req.headers['sec-websocket-key']; // da error no funca
+  var userID = 1;
   webSockets[userID] = ws;
   console.log('connected: ' + userID + ' in ' + Object.getOwnPropertyNames(ws));
 
