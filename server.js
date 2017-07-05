@@ -109,10 +109,13 @@ wss.on('connection', function connection(ws, req) {
   const location = url.parse(req.url, true);
   console.log('location : ' + location);
 
-  console.log(ws);
-  console.log(ws.headers);
+  console.log('ws : ' + ws);
+  console.log('headers : ' + ws.headers);
 
-var userID = ws.req.headers['sec-websocket-key'];
+  console.log('key ' + Server._connectionKey);
+    console.log('name ' + Server._peername);
+
+    // var userID = ws.req.headers['sec-websocket-key']; // da error no funca
   webSockets[userID] = ws;
   console.log('connected: ' + userID + ' in ' + Object.getOwnPropertyNames(ws));
 
