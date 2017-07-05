@@ -101,14 +101,16 @@ wss.on('connection', function connection(ws, req) {
   ws.on('pong', heartbeat);
 
   var ip = req.connection.remoteAddress;
-  const ip2 = req.headers['x-forwarded-for'];
+  const ip2 = req.headers['x-forwarded-for']; // ver si funciona con heroku
   console.log('ip2 :' + ip2);
 
   //console.log(ws._socket.remoteAddress);
   console.log('ip ' + ip);
   const location = url.parse(req.url, true);
+  console.log(location);
 
-console.log(ws.req.headers);
+  console.log(ws);
+  console.log(ws.headers);
 
 var userID = ws.req.headers['sec-websocket-key'];
   webSockets[userID] = ws;
