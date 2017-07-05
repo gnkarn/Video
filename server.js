@@ -3,6 +3,8 @@
 //and provide a hook for the WebSocket server to monitor for upgrade requests
 var express = require('express');
 const Websocket = require('ws');
+var webSockets = {} ;// userID: webSocket
+
 //const WebSocketServer = require('ws').Server;
 // WebSocket server is tied to a HTTP server. WebSocket
 // request is just an enhanced HTTP request. For more info
@@ -99,11 +101,20 @@ wss.on('connection', function connection(ws, req) {
   ws.on('pong', heartbeat);
 
   var ip = req.connection.remoteAddress;
-  console.log(ws._socket.remoteAddress);
+  const ip2 = req.headers['x-forwarded-for'];
+  console.log('ip2 :' + ip2);
+
+  //console.log(ws._socket.remoteAddress);
   console.log('ip ' + ip);
   const location = url.parse(req.url, true);
-  console.log(location);
-  
+
+console.log(ws.req.headers);
+
+var userID = ws.req.headers['sec-websocket-key'];
+  webSockets[userID] = ws;
+  console.log('connected: ' + userID + ' in ' + Object.getOwnPropertyNames(ws));
+
+
   // You might use location.query.access_token to authenticate or share sessions
   // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
 
