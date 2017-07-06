@@ -173,7 +173,7 @@ wss.on('connection', function connection(ws, req) {
 
   // test de envio  como array
   ws.on('message', function(msg) {
-    if (false) { // just a bypass to avoid parsing and test performance
+    if (true) { // just a bypass to avoid parsing and test performance
       ws.send(msg);
     } else {
       //console.log('message received ');
@@ -185,10 +185,12 @@ wss.on('connection', function connection(ws, req) {
         if (msgName != null) {
           switch (msgName) {
             case "msgArray1":
+            var columna = JsonObject.columna;
               wss.broadcast(JSON.stringify({ // antes ws.send ()
                 'msgName': 'msgArray1', // antes msgArray2
                 'type': 3,
-                'message': msgContent
+                'message': msgContent,
+                'columna' :columna
               }));
               break;
             default: //;
