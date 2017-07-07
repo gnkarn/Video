@@ -76,7 +76,7 @@ var interval = setInterval(() => {
 // it's useful for broadcasting a message:
 wss.broadcast = function(msg) {
   wss.clients.forEach(function each(cl) {
-    if (cl.readyState === Websocket.OPEN) {
+    if (cl.readyState === Websocket.OPEN) { // antes (cl.readyState === Websocket.OPEN)
       cl.send(msg);
       console.log('clients[] ' + cl._ultron.id ) ; // client id
     }
@@ -173,7 +173,7 @@ wss.on('connection', function connection(ws, req) {
 
   // test de envio  como array
   ws.on('message', function(msg) {
-    if (true) { // just a bypass to avoid parsing and test performance
+    if (false) { // just a bypass to avoid parsing and test performance
       wss.broadcast(msg);
     } else {
       //console.log('message received ');
