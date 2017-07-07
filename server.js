@@ -75,10 +75,10 @@ var interval = setInterval(() => {
 // server.connections An Array with all connected clients
 // it's useful for broadcasting a message:
 wss.broadcast = function(msg) {
-  wss.clients.forEach(function each(cl) {
-    if (cl.readyState === Websocket.OPEN) { // antes (cl.readyState === Websocket.OPEN)
-      cl.send(msg);
-      console.log('clients Id ' + cl._ultron.id ) ; // client id
+  wss.clients.forEach((client)=> {
+    if (client.readyState === Websocket.OPEN) { // antes (cl.readyState === Websocket.OPEN)
+      client.send(msg);
+      console.log('clients Id ' + client._ultron.id ) ; // client id
 
       console.log('Nro de clientes[] ' + clients.length ) ; // client id
     }
