@@ -78,7 +78,9 @@ wss.broadcast = function(msg) {
   wss.clients.forEach(function each(cl) {
     if (cl.readyState === Websocket.OPEN) { // antes (cl.readyState === Websocket.OPEN)
       cl.send(msg);
-      console.log('clients[] ' + cl._ultron.id ) ; // client id
+      console.log('clients Id ' + cl._ultron.id ) ; // client id
+
+      console.log('Nro de clientes[] ' + clients.length ) ; // client id
     }
   });
 };
@@ -182,10 +184,12 @@ wss.on('connection', function connection(ws, req) {
       if (JsonObject) {
         var msgName = JsonObject.msgName;
         var msgContent = JsonObject.message;
+
         if (msgName != null) {
           switch (msgName) {
             case "msgArray1":
             //var columna = JsonObject.columna;
+              //console.log(msgContent.length); // debug
               wss.broadcast(JSON.stringify({ // antes ws.send ()
                 'msgName': 'msgArray1', // antes msgArray2
                 'type': 3,
