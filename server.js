@@ -185,12 +185,12 @@ wss.on('connection', function connection(ws, req) {
         if (msgName != null) {
           switch (msgName) {
             case "msgArray1":
-            var columna = JsonObject.columna;
+            //var columna = JsonObject.columna;
               wss.broadcast(JSON.stringify({ // antes ws.send ()
                 'msgName': 'msgArray1', // antes msgArray2
                 'type': 3,
-                'message': msgContent,
-                'columna' :columna
+                'message': msgContent
+                //'columna' :columna
               }));
               break;
             default: //;

@@ -25,14 +25,14 @@ var vScale = myCanvasH / ledMatrixHeight;
 
 var lcolor =[0,0,0];
 
-//var matrixReceived = [lcolor];
-for(var matrixReceived = [], x=ledMatrixWidth; x--; matrixReceived[x]=[lcolor]);
+var matrixReceived = [];
+//for(var matrixReceived = [], x=ledMatrixWidth; x--; matrixReceived[x]=[lcolor]);
 // ahora lo organizo como matriz [y][x]
 
 
 // preparo el objeto para el mensaje
-//var ledMatrix = lcolor ;
-for(var ledMatrix = [], x=ledMatrixWidth; x--; ledMatrix[x]=[lcolor]);
+var ledMatrix = [] ;
+//for(var ledMatrix = [], x=ledMatrixWidth; x--; ledMatrix[x]=[lcolor]);
 
 // led element not needed so far
 function LedElement(x, y, lcolor) {
@@ -53,7 +53,7 @@ function safelyParseJson(json) {
 }
 
 function setup() {
-  frameRate(10);
+  frameRate(5);
   // connecto al servidor de socket, default is fixed ip
   //if (io.connect('192.168.0.16:3000')) {
   //socket = io.connect('192.168.0.16:3000')
@@ -86,11 +86,11 @@ function setup() {
       //  "b": lcolor.b
       //};
 
-      //ledMatrix[y * ledMatrixWidth + x] = lcolor;
-      ledMatrix[x][y] = lcolor;
+      ledMatrix[y * ledMatrixWidth + x] = lcolor;
+      //ledMatrix[x][y] = lcolor;
     }
   }
-  console.log(ledMatrix[0]);// solo la columna y=0
+  console.log(ledMatrix);// solo la columna y=0
 
   ws.onopen = function(evt) {
     var footer1 = select('#footer1');
@@ -110,11 +110,11 @@ function setup() {
 
     switch (msgName) {
       case "msgArray1":  // antes msgArray2
-      var columna = JsonObject.columna ;
+      //var columna = JsonObject.columna ;
         var footer2 = select('#footer2');
         footer2.html('FRarray= ' + floor(frameRate()));
         //console.log('recibido array:', evt.length);
-        matrixReceived[columna] = msgContent;
+        matrixReceived = msgContent;
         break;
 
       case "time":
@@ -150,16 +150,16 @@ function draw() {
     //    "b": lcolor.b
     //  };
 
-      //ledMatrix[y * ledMatrixWidth + x] = lcolor;
-      ledMatrix[x][y] = lcolor;
+      ledMatrix[y * ledMatrixWidth + x] = lcolor;
+      //ledMatrix[x][y] = lcolor;
 
       // load received matrix instead of original matrix
       //ledMatrix holds de source leds , to be sent to server
       //matrixReceived is the Matrix "rebounded" by the server to clients
       // if you need to see on canvas the sent matrix , just commentOut next line
 
-      //lcolor = Object.assign({}, matrixReceived[y * ledMatrixWidth + x]);
-      lcolor = Object.assign({}, matrixReceived[x][y]);
+      lcolor = Object.assign({}, matrixReceived[y * ledMatrixWidth + x]);
+      //lcolor = Object.assign({}, matrixReceived[x][y]);
       //var w = map(bright, 0, 255, 0, vScale);
       noStroke();
       // fill(lcolor.r, lcolor.g, lcolor.b, bright);
@@ -167,23 +167,25 @@ function draw() {
       //rectMode(CENTER);
       rect(x * (hScale), y * (vScale), hScale, vScale);
 
-        // en lugar de enviar toda la matriz , envio cada columna por separado para limitar el uso de memoria en el ESP
-      if (ws.readyState == 1) {
-        var obj = {
-        'msgName': "msgArray1",
-        'type': 3,
-        'message': ledMatrix[x] ,// antes ledMatrix
-        'columna':x
-      };
-        ws.send(JSON.stringify(obj));
-        //console.log('.');
-      }
+
       // console.log(myJSON);
     }
+
   }
   // sends Matrix pixel data to server as 1 matrix per frame
   // socket.emit('msgMatrixAserver', myJSON); // * original ok
+  // en lugar de enviar toda la matriz , envio cada columna por separado para limitar el uso de memoria en el ESP
+  if (ws.readyState == 1) {
+  var obj = {
+  'msgName': "msgArray1",
+  'type': 3,
+  'message': ledMatrix // antes ledMatrix[x]
+  //'columna':x
+  };
+  ws.send(JSON.stringify(obj));
 
+  //console.log('.');
+  }
 
 
 }
