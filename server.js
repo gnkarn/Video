@@ -174,7 +174,7 @@ wss.on('connection', function connection(ws, req) {
   // test de envio  como array
   ws.on('message', function(msg) {
     if (true) { // just a bypass to avoid parsing and test performance
-      ws.broadcast(msg);
+      wss.broadcast(msg);
     } else {
       //console.log('message received ');
       var JsonObject = safelyParseJson(msg);
