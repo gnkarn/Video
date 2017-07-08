@@ -70,8 +70,9 @@ var interval = setInterval(() => {
     }));
     //wss.isAlive = false;
     //wss.ping('', false, true);
+    readyToSend = OK ;
   });
-}, 2000);
+}, 4000);
 
 // server.connections An Array with all connected clients
 // it's useful for broadcasting a message:
