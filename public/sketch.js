@@ -55,7 +55,7 @@ function safelyParseJson(json) {
 }
 
 function setup() {
-  frameRate(5);
+  frameRate(50);
   // connecto al servidor de socket, default is fixed ip
   //if (io.connect('192.168.0.16:3000')) {
   //socket = io.connect('192.168.0.16:3000')
@@ -119,7 +119,7 @@ function setup() {
         matrixReceived = msgContent;
         break;
       case "recibido":
-        envio = OK;
+        readyToSend = OK;
         break;
       case "time":
         var footer3 = select('#footer3');

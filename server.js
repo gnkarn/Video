@@ -3,7 +3,7 @@
 //and provide a hook for the WebSocket server to monitor for upgrade requests
 var express = require('express');
 const Websocket = require('ws');
-//var clientes = {} ;// userID: webSocket
+// Server prepared to be hosted on Heroku
 
 //const WebSocketServer = require('ws').Server;
 // WebSocket server is tied to a HTTP server. WebSocket
@@ -64,7 +64,7 @@ var interval = setInterval(() => {
   wss.clients.forEach((client) => {
     if (wss.isAlive === false) return //wss.terminate();
     client.send(JSON.stringify({
-      'msgName': 'time',
+      'msgName': 'time', // debe ser time
       'type': 3,
       'message': new Date().toLocaleTimeString()
     }));
@@ -175,16 +175,21 @@ wss.on('connection', function connection(ws, req) {
 
   // test de envio  como array
   ws.on('message', function(msg) {
-    if (false) { // just a bypass to avoid parsing and test performance
+    if (true) { // just a bypass to avoid parsing and test performance
       wss.broadcast(msg);
     } else {
       //console.log('message received ');
+      if (msg.type = WStype_BIN ) {
+        // if bin message do
+      } else {
+        // is text message then do
+        // will be used to implement a more intelligen bufferutil
+        // between the sender and the ESP ,at the server
       var JsonObject = safelyParseJson(msg);
       //console.log("server: " + msg); // for debug
       if (JsonObject) {
         var msgName = JsonObject.msgName;
         var msgContent = JsonObject.message;
-
         if (msgName != null) {
           switch (msgName) {
             case "msgArray1":
@@ -201,6 +206,7 @@ wss.on('connection', function connection(ws, req) {
           }
         }
       }
+    }
     }
   });
 });
