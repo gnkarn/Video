@@ -76,7 +76,8 @@ var interval = setInterval(() => {
     }));
     //wss.isAlive = false;
     //wss.ping('', false, true);
-    readyToSend();
+
+    //readyToSend(); // for debug only
   });
 }, 4000);
 
