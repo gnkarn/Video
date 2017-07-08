@@ -59,7 +59,13 @@ console.log('*** VIDEO socket server running ***');
 function heartbeat() {
   this.isAlive = true;
 }
-
+function readyToSend(){ // pushes a new frame to the array experimental
+  wss.broadcast(JSON.stringify({
+    'msgName': 'recibido',
+    'type': 3,
+    'message': ""
+  }));
+}
 var interval = setInterval(() => {
   wss.clients.forEach((client) => {
     if (wss.isAlive === false) return //wss.terminate();
@@ -70,7 +76,7 @@ var interval = setInterval(() => {
     }));
     //wss.isAlive = false;
     //wss.ping('', false, true);
-    readyToSend = OK ;
+    readyToSend();
   });
 }, 4000);
 
