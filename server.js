@@ -27,6 +27,7 @@ var server = app
   .use((req, res) => res.sendFile(INDEX))
   .listen(process.env.PORT || 3000, function() {
     console.log('Express server listening on port %d in %s mode', this.address().port, app.settings.env);
+    console.log(this.address());
   });
 
 
@@ -78,9 +79,8 @@ wss.broadcast = function(msg) {
   wss.clients.forEach((client)=> {
     if (client.readyState === Websocket.OPEN) { // antes (cl.readyState === Websocket.OPEN)
       client.send(msg);
-      console.log('clients Id ' + client._ultron.id ) ; // client id
-
-      console.log('Nro de clientes[] ' + clients.length ) ; // client id
+      //console.log('clients Id ' + client._ultron.id ) ; // client id
+      //console.log('Nro de clientes[] ' + clients.length ) ; // client id
     }
   });
 };

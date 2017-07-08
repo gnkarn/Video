@@ -23,15 +23,17 @@ var vScale = myCanvasH / ledMatrixHeight;
 //  "b": 0
 //};
 
-var lcolor =[0,0,0];
+var lcolor = [0, 0, 0];
 
 var matrixReceived = [];
 //for(var matrixReceived = [], x=ledMatrixWidth; x--; matrixReceived[x]=[lcolor]);
 // ahora lo organizo como matriz [y][x]
-
+var readyToSend = 0;// when ESP parses a received frame it autorizes a new one
+const OK = 1;
+const notOK = 0;
 
 // preparo el objeto para el mensaje
-var ledMatrix = [] ;
+var ledMatrix = [];
 //for(var ledMatrix = [], x=ledMatrixWidth; x--; ledMatrix[x]=[lcolor]);
 
 // led element not needed so far
@@ -42,9 +44,9 @@ function LedElement(x, y, lcolor) {
 }
 
 function safelyParseJson(json) {
-  var JsonObject ;
+  var JsonObject;
   try {
-     JsonObject = JSON.parse(json);
+    JsonObject = JSON.parse(json);
   } catch (e) {
     console.log(e.message); // error in the above string (in this case, yes)!
     JsonObject = null;
@@ -77,8 +79,8 @@ function setup() {
       //lcolor.g = y;
       //lcolor.b = 0;
       lcolor[0] = x;
-      lcolor[1] = y ;
-      lcolor[2] = 0 ;
+      lcolor[1] = y;
+      lcolor[2] = 0;
       console.log(lcolor);
       //ledMatrix[y * ledMatrixWidth + x] = {
       //  "r": lcolor.r,
@@ -90,7 +92,7 @@ function setup() {
       //ledMatrix[x][y] = lcolor;
     }
   }
-  console.log(ledMatrix);// solo la columna y=0
+  console.log(ledMatrix); // solo la columna y=0
 
   ws.onopen = function(evt) {
     var footer1 = select('#footer1');
@@ -109,14 +111,16 @@ function setup() {
 
 
     switch (msgName) {
-      case "msgArray1":  // antes msgArray2
-      //var columna = JsonObject.columna ;
+      case "msgArray1": // antes msgArray2
+        //var columna = JsonObject.columna ;
         var footer2 = select('#footer2');
         footer2.html('FRarray= ' + floor(frameRate()));
         //console.log('recibido array:', evt.length);
         matrixReceived = msgContent;
         break;
-
+      case "recibido":
+        envio = OK;
+        break;
       case "time":
         var footer3 = select('#footer3');
         var time = msgContent;
@@ -144,11 +148,11 @@ function draw() {
       lcolor[1] = video.pixels[index + 1];
       lcolor[2] = video.pixels[index + 2];
 
-    //  ledMatrix[y * ledMatrixWidth + x] = {
-    //    "r": lcolor.r,
-    //    "g": lcolor.g,
-    //    "b": lcolor.b
-    //  };
+      //  ledMatrix[y * ledMatrixWidth + x] = {
+      //    "r": lcolor.r,
+      //    "g": lcolor.g,
+      //    "b": lcolor.b
+      //  };
 
       ledMatrix[y * ledMatrixWidth + x] = lcolor;
       //ledMatrix[x][y] = lcolor;
@@ -175,16 +179,15 @@ function draw() {
   // sends Matrix pixel data to server as 1 matrix per frame
   // socket.emit('msgMatrixAserver', myJSON); // * original ok
   // en lugar de enviar toda la matriz , envio cada columna por separado para limitar el uso de memoria en el ESP
-  if (ws.readyState == 1) {
-  var obj = {
-  'msgName': "msgArray1",
-  'type': 3,
-  'message': ledMatrix // antes ledMatrix[x]
-  //'columna':x
-  };
-  ws.send(JSON.stringify(obj));
-
-  //console.log('.');
+  if (ws.readyState * readyToSend) {
+    var obj = {
+      'msgName': "msgArray1",
+      'type': 3,
+      'message': ledMatrix // antes ledMatrix[x]
+      //'columna':x
+    };
+    ws.send(JSON.stringify(obj));
+    readyToSend = notOK ;
   }
 
 
