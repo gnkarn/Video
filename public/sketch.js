@@ -6,8 +6,8 @@ var myJSON;
 var HOST = location.origin.replace(/^http/, 'ws');
 var ws = new WebSocket(HOST);
 
-var ledMatrixWidth = 20;
-var ledMatrixHeight = 24;
+var ledMatrixWidth = 8; //20
+var ledMatrixHeight = 8;//24
 
 var myCanvasW = 800,
   myCanvasH = 600;
@@ -78,9 +78,9 @@ function setup() {
       //lcolor.r = x;
       //lcolor.g = y;
       //lcolor.b = 0;
-      lcolor[0] = x;
-      lcolor[1] = y;
-      lcolor[2] = 0;
+      lcolor[x,y,0] = x;
+      //lcolor[1] = y;
+      //lcolor[2] = 0;
       console.log(lcolor);
       //ledMatrix[y * ledMatrixWidth + x] = {
       //  "r": lcolor.r,
@@ -144,9 +144,9 @@ function draw() {
       //lcolor.g = video.pixels[index + 1];
       //lcolor.b = video.pixels[index + 2];
       var bright = video.pixels[index + 3]; // (r+g+b)/3;
-      lcolor[0] = video.pixels[index + 0];
-      lcolor[1] = video.pixels[index + 1];
-      lcolor[2] = video.pixels[index + 2];
+      lcolor = [video.pixels[index + 0],video.pixels[index + 1],video.pixels[index + 2]];
+      //lcolor[1] = video.pixels[index + 1];
+      //lcolor[2] = video.pixels[index + 2];
 
       //  ledMatrix[y * ledMatrixWidth + x] = {
       //    "r": lcolor.r,
