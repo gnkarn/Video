@@ -4,7 +4,7 @@
 var express = require('express');
 const Websocket = require('ws');
 // Server prepared to be hosted on Heroku
-
+console.log('version 1 ');
 //const WebSocketServer = require('ws').Server;
 // WebSocket server is tied to a HTTP server. WebSocket
 // request is just an enhanced HTTP request. For more info
@@ -30,13 +30,10 @@ var server = app
     console.log(this.address());
   });
 
-
 // llama la funcion socket con la funcion server como argumento
 // io es ahora organiza el intercambio de datos llamando a la funcion socket
 // import socket library
-
 var WStype_TEXT = 3;
-
 var myJSON; // contine el mensaje desde el servidor a los clientes
 
 // Create Websocket server
