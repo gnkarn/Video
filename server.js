@@ -185,6 +185,8 @@ wss.on('connection', function connection(ws, req) {
   ws.on('message', function(msg) {
     if (true) { // just a bypass to avoid parsing and test performance
       wss.broadcast(msg);
+      console.log(msg); // debug only
+        
     } else {
       //console.log('message received ');
       if (msg.type = WStype_BIN ) {
