@@ -95,7 +95,7 @@ function setup() {
       ledMatrix[y * ledMatrixWidth + x] = lcolor;
       //ledMatrix[x][y] = lcolor;
     }
-    
+
   }
   console.log(ledMatrix); // solo la columna y=0
 
@@ -108,7 +108,7 @@ function setup() {
   ws.onmessage = function(evt) {
     //if (typeof evt.data === 'string') { // utf8 o string
     //create a JSON object
-    //console.log(evt);
+    console.log(ws.binaryType);
 
     switch (ws.binaryType) {
       case 'blob':
@@ -122,6 +122,7 @@ function setup() {
           footer2.html('FRarray= ' + floor(frameRate()));
           //console.log('recibido array:', evt.length);
           matrixReceived = msgContent;
+          readyToSend = OK; // enable for  debugging , receiving a frame enables the next
           break;
         case "recibido":
           readyToSend = OK;
@@ -134,8 +135,10 @@ function setup() {
           break;
         default:
       }
+      break;
       case 'arraybuffer':
-          console.log(evt.type + evt.data);
+          console.log(evt);
+          alert('binary received')
           break;
       default:
 
@@ -200,6 +203,7 @@ function draw() {
       //'columna':x
     };
     ws.send(JSON.stringify(obj));
+    sendBinary(); // testing binary send
     readyToSend = notOK ; // noOK  -  change to OK for debug
   }
 

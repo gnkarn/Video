@@ -76,10 +76,9 @@ var interval = setInterval(() => {
     }));
     //wss.isAlive = false;
     //wss.ping('', false, true);
-
-    //readyToSend(); // for debug only
+    //readyToSend(); // for debug only  , simulates an acknowledge from ESP to triger a message back to source
   });
-}, 4000);
+}, 1000);
 
 // server.connections An Array with all connected clients
 // it's useful for broadcasting a message:
@@ -186,7 +185,7 @@ wss.on('connection', function connection(ws, req) {
     if (true) { // just a bypass to avoid parsing and test performance
       wss.broadcast(msg);
       console.log(msg); // debug only
-        
+
     } else {
       //console.log('message received ');
       if (msg.type = WStype_BIN ) {
