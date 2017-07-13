@@ -29,7 +29,7 @@ var lcolor = [0, 0, 0];
 var matrixReceived = [];
 //for(var matrixReceived = [], x=ledMatrixWidth; x--; matrixReceived[x]=[lcolor]);
 // ahora lo organizo como matriz [y][x]
-var readyToSend = 0;// setup value is 0 . when ESP parses a received frame it autorizes a new one
+var readyToSend = 1;// setup value is 0 . when ESP parses a received frame it autorizes a new one
 const OK = 1;
 const notOK = 0;
 
@@ -40,11 +40,12 @@ var ledMatrix = [];
 // Prepare data and send as binary socket
 function sendBinary(binData){
   ws.binaryType = 'arraybuffer';
-  var data = [0,0,0,1,1,1,255,0,0,0,255,0,0,0,255];
+  var data = [binData,0,0,1,1,1,255,0,0,0,255,0,0,0,255];
   var byteArray = new Uint8Array(data);
   ws.send(byteArray.buffer);
 
 }
+
 
 // led element not needed so far
 function LedElement(x, y, lcolor) {
@@ -110,7 +111,7 @@ function setup() {
     //create a JSON object
     console.log(ws.binaryType);
 
-    switch (ws.binaryType) {
+    switch (evt.target.binaryType) {
       case 'blob':
       var JsonObject = safelyParseJson(evt.data);
       var msgName = JsonObject.msgName;
@@ -202,8 +203,9 @@ function draw() {
       'message': ledMatrix // antes ledMatrix[x]
       //'columna':x
     };
+    ws.binaryType = 'blob';
     ws.send(JSON.stringify(obj));
-    sendBinary(); // testing binary send
+    //sendBinary(1); // testing binary send
     readyToSend = notOK ; // noOK  -  change to OK for debug
   }
 

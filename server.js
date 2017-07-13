@@ -73,6 +73,7 @@ var interval = setInterval(() => {
     }));
     //wss.isAlive = false;
     //wss.ping('', false, true);
+
     //readyToSend(); // for debug only  , simulates an acknowledge from ESP to triger a message back to source
   });
 }, 1000);
@@ -182,6 +183,7 @@ wss.on('connection', function connection(ws, req) {
     if (true) { // just a bypass to avoid parsing and test performance
       wss.broadcast(msg);
       console.log(msg); // debug only
+      //console.log(ws);
 
     } else {
       //console.log('message received ');
