@@ -111,6 +111,7 @@ function setup() {
     var tipo = evt.data instanceof ArrayBuffer;
     if (tipo) {
       // if binary
+      console.log('binario');
       var buffer = new ArrayBuffer;
        buffer = (evt.data);
        var bufferView = new Uint8Array(buffer); // enable access to the buffer array
@@ -132,6 +133,7 @@ function setup() {
 
     } else {
       // if text UTF-8
+      console.log('text');
       var JsonObject = safelyParseJson(evt.data);
       var msgName = JsonObject.msgName;
       var msgContent = JsonObject.message;
