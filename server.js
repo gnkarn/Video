@@ -66,6 +66,7 @@ function readyToSend(){ // pushes a new frame to the array experimental
 var interval = setInterval(() => {
   wss.clients.forEach((client) => {
     if (wss.isAlive === false) return //wss.terminate();
+  //  client.binaryType = 'blob'; // *
     client.send(JSON.stringify({
       'msgName': 'time', // debe ser time
       'type': 3,

@@ -8,7 +8,7 @@ var ws = new WebSocket(HOST);
 
 
 var ledMatrixWidth = 8; //20
-var ledMatrixHeight = 8;//24
+var ledMatrixHeight = 8; //24
 
 var myCanvasW = 800,
   myCanvasH = 600;
@@ -29,7 +29,7 @@ var lcolor = [0, 0, 0];
 var matrixReceived = [];
 //for(var matrixReceived = [], x=ledMatrixWidth; x--; matrixReceived[x]=[lcolor]);
 // ahora lo organizo como matriz [y][x]
-var readyToSend = 1;// setup value is 0 . when ESP parses a received frame it autorizes a new one
+var readyToSend = 1; // setup value is 0 . when ESP parses a received frame it autorizes a new one
 const OK = 1;
 const notOK = 0;
 
@@ -38,12 +38,11 @@ var ledMatrix = [];
 //for(var ledMatrix = [], x=ledMatrixWidth; x--; ledMatrix[x]=[lcolor]);
 
 // Prepare data and send as binary socket
-function sendBinary(binData){
+function sendBinary(binData) {
+  var merged = [].concat.apply([], binData)
   ws.binaryType = 'arraybuffer';
-  var data = [binData,0,0,1,1,1,255,0,0,0,255,0,0,0,255];
-  var byteArray = new Uint8Array(data);
+  var byteArray = new Uint8Array(merged); // combina los arrays RGB en un array plano
   ws.send(byteArray.buffer);
-
 }
 
 
@@ -86,7 +85,7 @@ function setup() {
   for (var y = 0; y < video.height; y++) {
     for (var x = 0; x < video.width; x++) {
       var index = (x + (y * video.width)) * 4;
-      lcolor[x,y,0] = x;
+      lcolor[x, y, 0] = x;
       console.log(lcolor);
       //ledMatrix[y * ledMatrixWidth + x] = {
       //  "r": lcolor.r,
@@ -109,10 +108,30 @@ function setup() {
   ws.onmessage = function(evt) {
     //if (typeof evt.data === 'string') { // utf8 o string
     //create a JSON object
-    console.log(ws.binaryType);
+    var tipo = evt.data instanceof ArrayBuffer;
+    if (tipo) {
+      // if binary
+      var buffer = new ArrayBuffer;
+       buffer = (evt.data);
+       var bufferView = new Uint8Array(buffer); // enable access to the buffer array
+      //var bufferArray = Array.from(buffer); // convert to normal array
+      console.log(bufferView);
+      for (var y = 0; y < ledMatrixHeight; y++) {
+        for (var x = 0; x < ledMatrixWidth; x++) {
+          var index = (x + (y * ledMatrixWidth)); // index represents pixels adress, index*3 is begining of each RGB value on the flat bin arrray
+          // converts to a normal array
+          matrixReceived[index] = [bufferView[3*index+0],bufferView[3*index + 1],bufferView[3*index + 2]];
+          //matrixReceived[index+1] = bufferView[index + 1];
+          //matrixReceived[index+2] = bufferView[index + 2];
 
-    switch (evt.target.binaryType) {
-      case 'blob':
+          //matrixReceived = evt.data
+          //alert('binary received')
+          readyToSend = OK; // enable for  debugging , receiving a frame enables the next
+        }
+      }
+
+    } else {
+      // if text UTF-8
       var JsonObject = safelyParseJson(evt.data);
       var msgName = JsonObject.msgName;
       var msgContent = JsonObject.message;
@@ -136,18 +155,9 @@ function setup() {
           break;
         default:
       }
-      break;
-      case 'arraybuffer':
-          console.log(evt);
-          alert('binary received')
-          break;
-      default:
-
-    }
-
-    //}
+    };
   };
-}
+} // end of setup
 
 function draw() {
   background(100);
@@ -156,12 +166,12 @@ function draw() {
   for (var y = 0; y < video.height; y++) {
     for (var x = 0; x < video.width; x++) {
       //var index = (video.width - x + 1 + (y * video.width)) * 4;
-      var index = (x  + (y * video.width)) * 4;
+      var index = (x + (y * video.width)) * 4;
       //lcolor.r = video.pixels[index + 0];
       //lcolor.g = video.pixels[index + 1];
       //lcolor.b = video.pixels[index + 2];
       var bright = video.pixels[index + 3]; // (r+g+b)/3;
-      lcolor = [video.pixels[index + 0],video.pixels[index + 1],video.pixels[index + 2]];
+      lcolor = [video.pixels[index + 0], video.pixels[index + 1], video.pixels[index + 2]];
       //lcolor[1] = video.pixels[index + 1];
       //lcolor[2] = video.pixels[index + 2];
 
@@ -203,10 +213,10 @@ function draw() {
       'message': ledMatrix // antes ledMatrix[x]
       //'columna':x
     };
-    ws.binaryType = 'blob';
-    ws.send(JSON.stringify(obj));
-    //sendBinary(1); // testing binary send
-    readyToSend = notOK ; // noOK  -  change to OK for debug
+    //ws.binaryType = 'blob';
+    //ws.send(JSON.stringify(obj));
+    sendBinary(ledMatrix); // testing binary send
+    readyToSend = notOK; // noOK  -  change to OK for debug
   }
 
 
