@@ -142,7 +142,7 @@ function setup() {
           footer2.html('FRarray= ' + floor(frameRate()));
           //console.log('recibido array:', evt.length);
           matrixReceived = msgContent;
-          readyToSend = OK; // enable for  debugging , receiving a frame enables the next
+          //readyToSend = OK; // enable for  debugging , receiving a frame enables the next
           break;
         case "recibido":
           readyToSend = OK;
