@@ -126,7 +126,7 @@ function setup() {
 
           //matrixReceived = evt.data
           //alert('binary received')
-          readyToSend = OK; // enable for  debugging , receiving a frame enables the next
+          //readyToSend = OK; //* enable for  debugging , receiving a frame enables the next
         }
       }
 
