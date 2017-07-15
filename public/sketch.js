@@ -65,7 +65,7 @@ function safelyParseJson(json) {
 }
 
 function setup() {
-  frameRate(50);
+  frameRate(30);
   // connecto al servidor de socket, default is fixed ip
   //if (io.connect('192.168.0.16:3000')) {
   //socket = io.connect('192.168.0.16:3000')
@@ -111,12 +111,12 @@ function setup() {
     var tipo = evt.data instanceof ArrayBuffer;
     if (tipo) {
       // if binary
-      console.log('binario');
+      //*console.log('binario');
       var buffer = new ArrayBuffer;
        buffer = (evt.data);
        var bufferView = new Uint8Array(buffer); // enable access to the buffer array
       //var bufferArray = Array.from(buffer); // convert to normal array
-      console.log(bufferView);
+      //*console.log(bufferView);
       for (var y = 0; y < ledMatrixHeight; y++) {
         for (var x = 0; x < ledMatrixWidth; x++) {
           var index = (x + (y * ledMatrixWidth)); // index represents pixels adress, index*3 is begining of each RGB value on the flat bin arrray
@@ -133,7 +133,7 @@ function setup() {
 
     } else {
       // if text UTF-8
-      console.log('text');
+      //*console.log('text');
       var JsonObject = safelyParseJson(evt.data);
       var msgName = JsonObject.msgName;
       var msgContent = JsonObject.message;
@@ -173,16 +173,8 @@ function draw() {
       //lcolor.g = video.pixels[index + 1];
       //lcolor.b = video.pixels[index + 2];
       var bright = video.pixels[index + 3]; // (r+g+b)/3;
-      lcolor = [video.pixels[index + 0], video.pixels[index + 1], video.pixels[index + 2]];
-      //lcolor[1] = video.pixels[index + 1];
-      //lcolor[2] = video.pixels[index + 2];
-
-      //  ledMatrix[y * ledMatrixWidth + x] = {
-      //    "r": lcolor.r,
-      //    "g": lcolor.g,
-      //    "b": lcolor.b
-      //  };
-
+      lcolor = [video.pixels[index + 0], video.pixels[index + 1],
+      video.pixels[index + 2]];
       ledMatrix[y * ledMatrixWidth + x] = lcolor;
       //ledMatrix[x][y] = lcolor;
 
@@ -199,8 +191,6 @@ function draw() {
       fill(lcolor[0], lcolor[1], lcolor[2], bright);
       //rectMode(CENTER);
       rect(x * (hScale), y * (vScale), hScale, vScale);
-
-
       // console.log(myJSON);
     }
 
@@ -215,9 +205,8 @@ function draw() {
       'message': ledMatrix // antes ledMatrix[x]
       //'columna':x
     };
-    //ws.binaryType = 'blob';
     //ws.send(JSON.stringify(obj));
-    sendBinary(ledMatrix); // testing binary send
+    sendBinary(ledMatrix); //  binary send
     readyToSend = notOK; // noOK  -  change to OK for debug
   }
 
