@@ -85,10 +85,10 @@ var interval = setInterval(() => {
 // server.connections An Array with all connected clients
 // it's useful for broadcasting a message:
 // see https://www.npmjs.com/package/nodejs-websocket  and change this function - PENDING.
-wss.broadcast = function(msg) {
+wss.broadcast = function(msg,ws) {
   wss.clients.forEach((client)=> {
     if (client.readyState === Websocket.OPEN) { // antes (cl.readyState === Websocket.OPEN)
-      if (client != connection){ // not to the socket sender , delete when testing in loopback to the WEB client without ESP
+      if (client != ws){ // not to the socket sender , delete when testing in loopback to the WEB client without ESP
       client.send(msg);
       console.log('header' + ws.headers);
     }
@@ -189,7 +189,7 @@ wss.on('connection', function connection(ws, req) {
   // test de envio  como array
   ws.on('message', function(msg) {
     if (true) { // just a bypass to avoid parsing and test performance
-      wss.broadcast(msg);
+      wss.broadcast(msg,ws);
       console.log(msg); // debug only
       //console.log(ws);
 
