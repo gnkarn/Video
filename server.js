@@ -88,9 +88,9 @@ var interval = setInterval(() => {
 wss.broadcast = function(msg) {
   wss.clients.forEach((client)=> {
     if (client.readyState === Websocket.OPEN) { // antes (cl.readyState === Websocket.OPEN)
-      if (client != ws){ // not to the socket sender
+      if (client != ws){ // not to the socket sender , delete when testing in loopback to the WEB client without ESP
       client.send(msg);
-      console.log('header' + connection.headers);
+      console.log('header' + ws.headers);
     }
       //console.log('clients Id ' + client._ultron.id ) ; // client id
       //console.log('Nro de clientes[] ' + clients.length ) ; // client id
