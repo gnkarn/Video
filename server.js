@@ -1,6 +1,9 @@
 // prepare the HTTP server on port 3000
 //We need an HTTP server to do two things: serve our client-side assets
 //and provide a hook for the WebSocket server to monitor for upgrade requests
+
+// review by studying this : https://www.npmjs.com/package/nodejs-websocket
+// **************************************************
 var express = require('express');
 const Websocket = require('ws');
 // Server prepared to be hosted on Heroku
@@ -81,10 +84,12 @@ var interval = setInterval(() => {
 
 // server.connections An Array with all connected clients
 // it's useful for broadcasting a message:
+// see https://www.npmjs.com/package/nodejs-websocket  and change this function - PENDING.
 wss.broadcast = function(msg) {
   wss.clients.forEach((client)=> {
     if (client.readyState === Websocket.OPEN) { // antes (cl.readyState === Websocket.OPEN)
       client.send(msg);
+      console.log('header' + connection.headers);
       //console.log('clients Id ' + client._ultron.id ) ; // client id
       //console.log('Nro de clientes[] ' + clients.length ) ; // client id
     }
@@ -192,7 +197,7 @@ wss.on('connection', function connection(ws, req) {
         // if bin message do
       } else {
         // is text message then do
-        // will be used to implement a more intelligen bufferutil
+        // will be used to implement a more intelligent bufferutil
         // between the sender and the ESP ,at the server
       var JsonObject = safelyParseJson(msg);
       //console.log("server: " + msg); // for debug
