@@ -7,8 +7,8 @@ var HOST = location.origin.replace(/^http/, 'ws');
 var ws = new WebSocket(HOST);
 
 
-var ledMatrixWidth = 8; //20
-var ledMatrixHeight = 8; //24
+var ledMatrixWidth = 20; //20
+var ledMatrixHeight = 24; //24
 
 var myCanvasW = 800,
   myCanvasH = 600;
