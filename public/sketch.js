@@ -85,8 +85,7 @@ function setup() {
   for (var y = 0; y < video.height; y++) {
     for (var x = 0; x < video.width; x++) {
       var index = (x + (y * video.width)) * 4;
-      lcolor[0] = x;
-      lcolor[1] = y;
+      lcolor = [x,y,0];
       console.log(lcolor);
       //ledMatrix[y * ledMatrixWidth + x] = {
       //  "r": lcolor.r,
