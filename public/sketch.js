@@ -85,7 +85,8 @@ function setup() {
   for (var y = 0; y < video.height; y++) {
     for (var x = 0; x < video.width; x++) {
       var index = (x + (y * video.width)) * 4;
-      lcolor[x, y, 0] = x;
+      lcolor[0] = x;
+      lcolor[1] = y;
       console.log(lcolor);
       //ledMatrix[y * ledMatrixWidth + x] = {
       //  "r": lcolor.r,
@@ -175,8 +176,7 @@ function draw() {
       var bright = video.pixels[index + 3]; // (r+g+b)/3;
       lcolor = [video.pixels[index + 0], video.pixels[index + 1],
       video.pixels[index + 2]];
-      ledMatrix[y * ledMatrixWidth + x] = lcolor;
-      //ledMatrix[x][y] = lcolor;
+      //ledMatrix[y * ledMatrixWidth + x] = lcolor; // ** enable this for normal operation
 
       // load received matrix instead of original matrix
       //ledMatrix holds de source leds , to be sent to server
