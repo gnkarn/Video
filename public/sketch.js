@@ -165,17 +165,17 @@ function draw() {
   background(100);
   video.loadPixels();
   loadPixels();
-  for (var x = 0; x < video.width; x++) {
-    for (var y = 0; y < video.height; y++) {
+  for (var y = 0; y < video.height; y++) {
+    for (var x = 0; x < video.width; x++) {
       //var index = (video.width - x + 1 + (y * video.width)) * 4;
-      var index = (y + (x * video.height)) * 4;
+      var index = (x + (y * video.width)) * 4;
       //lcolor.r = video.pixels[index + 0];
       //lcolor.g = video.pixels[index + 1];
       //lcolor.b = video.pixels[index + 2];
       var bright = video.pixels[index + 3]; // (r+g+b)/3;
       lcolor = [video.pixels[index + 0], video.pixels[index + 1],
       video.pixels[index + 2]];
-      //  ledMatrix[x * ledMatrixHeight + y] = lcolor; // ** ! enable this for normal operation
+      // ledMatrix[y * ledMatrixWidth + x] = lcolor; // ** ! enable this for normal operation
 
       // load received matrix instead of original matrix
       //ledMatrix holds de source leds , to be sent to server
