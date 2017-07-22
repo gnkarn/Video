@@ -82,17 +82,17 @@ function setup() {
   video.parent('#canvas2');
 
   // set up the matrix object and all elements
-  for (var y = 0; y < video.height; y++) {
-    for (var x = 0; x < video.width; x++) {
-      var index = (x + (y * video.width)) * 4;
-      lcolor = [x,y,(x/2)*ledMatrixHeight+y];
+  for (var x = 0; x < video.width; x++) {
+    for (var y = 0; y < video.height; y++) {
+      var index = (y + (x * video.height)) * 4;
+      lcolor = [x,y,int(x/2*ledMatrixHeight)+y];
       console.log(lcolor);
       //ledMatrix[y * ledMatrixWidth + x] = {
       //  "r": lcolor.r,
       //  "g": lcolor.g,
       //  "b": lcolor.b
       //};
-      ledMatrix[y * ledMatrixWidth + x] = lcolor;
+      ledMatrix[x * ledMatrixHeight + y] = lcolor;
       //ledMatrix[x][y] = lcolor;
     }
 
@@ -117,9 +117,9 @@ function setup() {
        var bufferView = new Uint8Array(buffer); // enable access to the buffer array
       //var bufferArray = Array.from(buffer); // convert to normal array
       //*console.log(bufferView);
-      for (var y = 0; y < ledMatrixHeight; y++) {
-        for (var x = 0; x < ledMatrixWidth; x++) {
-          var index = (x + (y * ledMatrixWidth)); // index represents pixels adress, index*3 is begining of each RGB value on the flat bin arrray
+      for (var x = 0; x <  ledMatrixWidth; x++) {
+        for (var y= 0; y < ledMatrixHeight; y++) {
+          var index = (y + (x * ledMatrixHeight)); // index represents pixels adress, index*3 is begining of each RGB value on the flat bin arrray
           // converts to a normal array
           matrixReceived[index] = [bufferView[3*index+0],bufferView[3*index + 1],bufferView[3*index + 2]];
           //matrixReceived[index+1] = bufferView[index + 1];
@@ -165,17 +165,17 @@ function draw() {
   background(100);
   video.loadPixels();
   loadPixels();
-  for (var y = 0; y < video.height; y++) {
-    for (var x = 0; x < video.width; x++) {
+  for (var x = 0; x < video.width; x++) {
+    for (var y = 0; y < video.height; y++) {
       //var index = (video.width - x + 1 + (y * video.width)) * 4;
-      var index = (x + (y * video.width)) * 4;
+      var index = (y + (x * video.height)) * 4;
       //lcolor.r = video.pixels[index + 0];
       //lcolor.g = video.pixels[index + 1];
       //lcolor.b = video.pixels[index + 2];
       var bright = video.pixels[index + 3]; // (r+g+b)/3;
       lcolor = [video.pixels[index + 0], video.pixels[index + 1],
       video.pixels[index + 2]];
-      //  ledMatrix[y * ledMatrixWidth + x] = lcolor; // ** ! enable this for normal operation
+      //  ledMatrix[x * ledMatrixHeight + y] = lcolor; // ** ! enable this for normal operation
 
       // load received matrix instead of original matrix
       //ledMatrix holds de source leds , to be sent to server
