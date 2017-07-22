@@ -182,7 +182,7 @@ function draw() {
       //matrixReceived is the Matrix "rebounded" by the server to clients
       // if you need to see on canvas the sent matrix , just commentOut next line
 
-      lcolor = Object.assign({}, matrixReceived[y * ledMatrixWidth + x]); // ** ! enable to see the image send by ESP
+      //lcolor = Object.assign({}, matrixReceived[y * ledMatrixWidth + x]); // ** ! enable to see the image send by ESP
       noStroke();
       // fill(lcolor.r, lcolor.g, lcolor.b, bright);
       fill(lcolor[0], lcolor[1], lcolor[2], bright);
