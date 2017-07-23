@@ -173,8 +173,8 @@ function draw() {
       var bright = video.pixels[index + 3]; // (r+g+b)/3;
       lcolor = [video.pixels[index + 0], video.pixels[index + 1],
       video.pixels[index + 2]];
-      // ledMatrix[y * ledMatrixWidth + x] = lcolor; // ** ! enable this for normal operation (old)
-       ledMatrix[(ledMatrixHeight-y) +  x * ledMatrixHeight] = lcolor; // ** For led matrix
+      // ledMatrix[y * ledMatrixWidth + x] = lcolor; // ** ! enable this rebound at heroku (NO ESP)
+       //ledMatrix[(ledMatrixHeight-y) +  x * ledMatrixHeight] = lcolor; // ** For led matrix with ESP
 
       // load received matrix instead of original matrix
       //ledMatrix holds de source leds , to be sent to server
