@@ -85,10 +85,15 @@ function setup() {
   for (var x = 0; x < video.width; x++) {
     for (var y = 0; y < video.height; y++) {
       // var index = (y + (x * video.height)) * 4;
-      var y1 = video.height-y-1; // transform y from video coord to matrix coords
-      lcolor = [int(x * 254 / ledMatrixWidth),(y1>0)*int(x * 254 / ledMatrixWidth),(y1>0)*int(x * 254 / ledMatrixWidth)]; // for debugging and identification
-      if (x/2==int(x/2)) {
-        lcolor = [0,0,0]
+      var impar = ((x / 2) < > int(x / 2));
+      if (impar) {
+        y1 = y
+      } else {
+        y1 = video.height - y - 1
+      } 
+      lcolor = [int(x * 254 / ledMatrixWidth), (y1 > 0) * int(x * 254 / ledMatrixWidth), (y1 > 0) * int(x * 254 / ledMatrixWidth)]; // for debugging and identification
+      if (x / 2 == int(x / 2)) {
+        lcolor = [0, 0, 0]
       }
       console.log(lcolor);
       ledMatrix[x * ledMatrixHeight + y] = lcolor; // vertical serpentine layout
@@ -112,15 +117,15 @@ function setup() {
       // if binary
       //*console.log('binario');
       var buffer = new ArrayBuffer;
-       buffer = (evt.data);
-       var bufferView = new Uint8Array(buffer); // enable access to the buffer array
+      buffer = (evt.data);
+      var bufferView = new Uint8Array(buffer); // enable access to the buffer array
       //var bufferArray = Array.from(buffer); // convert to normal array
       //*console.log(bufferView);
-      for (var x = 0; x <  ledMatrixWidth; x++) {
-        for (var y= 0; y < ledMatrixHeight; y++) {
+      for (var x = 0; x < ledMatrixWidth; x++) {
+        for (var y = 0; y < ledMatrixHeight; y++) {
           var index = (y + (x * ledMatrixHeight)); // index represents pixels adress, index*3 is begining of each RGB value on the flat bin arrray
           // converts to a normal array
-          matrixReceived[index] = [bufferView[3*index+0],bufferView[3*index + 1],bufferView[3*index + 2]];
+          matrixReceived[index] = [bufferView[3 * index + 0], bufferView[3 * index + 1], bufferView[3 * index + 2]];
           //matrixReceived[index+1] = bufferView[index + 1];
           //matrixReceived[index+2] = bufferView[index + 2];
 
@@ -173,12 +178,19 @@ function draw() {
       //lcolor.b = video.pixels[index + 2];
       var bright = video.pixels[index + 3]; // (r+g+b)/3;
       lcolor = [video.pixels[index + 0], video.pixels[index + 1],
-      video.pixels[index + 2]];
-      if (y==0) {
-        lcolor = [254,0,0]; // test patern red line at y=0
+        video.pixels[index + 2]
+      ];
+      if (y == 0) {
+        lcolor = [254, 0, 0]; // test patern red line at y=0
+      }
+      var impar = ((x / 2) < > int(x / 2));
+      if (impar) {
+        y1 = y
+      } else {
+        y1 = ledMatrixHeight - y - 1
       }
       // ledMatrix[y * ledMatrixWidth + x] = lcolor; // ** ! enable this rebound at heroku (NO ESP)
-       ledMatrix[(ledMatrixHeight-y-1) +  x * ledMatrixHeight] = lcolor; // ** For led matrix with ESP
+      ledMatrix[(y1) + x * ledMatrixHeight] = lcolor; // ** For led matrix with ESP
 
       // load received matrix instead of original matrix
       //ledMatrix holds de source leds , to be sent to server
@@ -186,7 +198,7 @@ function draw() {
       // if you need to see on canvas the sent matrix , just commentOut next line
 
       //lcolor = Object.assign({}, matrixReceived[y * ledMatrixWidth + x]); // ** ! enable to see the image send form heroku
-        //lcolor = Object.assign({}, matrixReceived[(ledMatrixHeight-y) + ledMatrixHeight * x]); // ** ! enable to see the image send by ESP
+      //lcolor = Object.assign({}, matrixReceived[(ledMatrixHeight-y) + ledMatrixHeight * x]); // ** ! enable to see the image send by ESP
       noStroke();
       // fill(lcolor.r, lcolor.g, lcolor.b, bright);
       fill(lcolor[0], lcolor[1], lcolor[2], bright);
