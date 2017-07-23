@@ -174,6 +174,9 @@ function draw() {
       var bright = video.pixels[index + 3]; // (r+g+b)/3;
       lcolor = [video.pixels[index + 0], video.pixels[index + 1],
       video.pixels[index + 2]];
+      if (y=0) {
+        lcolor = [254,0,0]; // test patern
+      }
       // ledMatrix[y * ledMatrixWidth + x] = lcolor; // ** ! enable this rebound at heroku (NO ESP)
        ledMatrix[(ledMatrixHeight-y-1) +  x * ledMatrixHeight] = lcolor; // ** For led matrix with ESP
 
