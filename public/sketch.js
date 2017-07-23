@@ -84,15 +84,13 @@ function setup() {
   // set up the matrix object and all elements
   for (var x = 0; x < video.width; x++) {
     for (var y = 0; y < video.height; y++) {
-      var index = (y + (x * video.height)) * 4;
-      lcolor = [int(x * 254 / ledMatrixWidth),0,x]; // for debugging and identification
+      // var index = (y + (x * video.height)) * 4;
+      lcolor = [int(x * 254 / ledMatrixWidth),int(x * 254 / ledMatrixWidth),int(x * 254 / ledMatrixWidth)]; // for debugging and identification
+      if (x/2==int(x/2)) {
+        lcolor = [0,0,0]
+      }
       console.log(lcolor);
-      //ledMatrix[y * ledMatrixWidth + x] = {
-      //  "r": lcolor.r,
-      //  "g": lcolor.g,
-      //  "b": lcolor.b
-      //};
-      ledMatrix[x * ledMatrixHeight + y] = lcolor;
+      ledMatrix[x * ledMatrixHeight + y] = lcolor; // vertical serpentine layout
       //ledMatrix[x][y] = lcolor;
     }
 
