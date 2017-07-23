@@ -85,7 +85,7 @@ function setup() {
   for (var x = 0; x < video.width; x++) {
     for (var y = 0; y < video.height; y++) {
       // var index = (y + (x * video.height)) * 4;
-      var imp = ((x / 2) < > int(x / 2));
+      var imp = ((x / 2) != int(x / 2));
       if (imp) {
         y1 = y
       } else {
@@ -183,7 +183,7 @@ function draw() {
       if (y == 0) {
         lcolor = [254, 0, 0]; // test patern red line at y=0
       }
-      var impar = ((x / 2) < > int(x / 2));
+      var impar = ((x / 2) != int(x / 2));
       if (impar) {
         y1 = y
       } else {
